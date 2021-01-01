@@ -127,6 +127,13 @@ CDEFS += DEBUG=1 __DEBUG__=1
 endif
 endif
 
+ifeq ($(MODULE_USE_PTHREAD),1)
+CFLAGS += -pthread
+ifneq ($(MODULE_BIN_TYPE), static)
+LDFLAGS += -pthread
+endif
+endif
+
 MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
 OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(strip $(MODULE_OBJS)))
 OBJS_DEPS := $(OBJS:.o=.d)
