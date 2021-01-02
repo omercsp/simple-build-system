@@ -184,7 +184,7 @@ LDFLAGS := $(strip $(LDFLAGS))
 LIBS_FLAGS := $(strip $(LIBS_FLAGS))
 
 
-ifneq ($(PROJECT_VERBOSE),1)
+ifneq ($(filter 1,$(PROJECT_VERBOSE) $(MODULE_VERBOSE) $(SBS_VERBOSE)),1)
 Q := @
 endif
 

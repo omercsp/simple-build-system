@@ -5,6 +5,7 @@ MODULE_OBJS := dynamic.o
 MODULE_CDEFS := DYNLIB_DEF=10
 MODULE_POST_MODULES := dynlib_tester
 MODULE_VERBOSE := 1
+MODULE_VERBOSE := 1
 
 include ../module.inc.mk
 
