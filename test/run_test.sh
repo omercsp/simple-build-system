@@ -18,6 +18,9 @@ export LD_LIBRARY_PATH=${PROJECT_DIR}/lib
 ${PROJECT_DIR}/prog/obj/dbg/prog >> ${outfile}
 ${PROJECT_DIR}/dynlib/dynlib_tester/obj/dbg/dyn_tester >> ${outfile}
 
+export LD_LIBRARY_PATH=${PROJECT_DIR}/prog2/prog2_dynlib/obj/dbg
+${PROJECT_DIR}/prog2/obj/dbg/prog2 >> ${outfile}
+
 diff -u ${SCRIPT_DIR}/expected_output.txt ${outfile}
 
 cd ${PROJECT_DIR}/order

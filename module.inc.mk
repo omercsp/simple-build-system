@@ -191,7 +191,7 @@ endif
 # The empty target is added as an ordered dependency so the binary rule
 # will always require *something* to do. This way we can suprees the 'up to date'
 # messages without silencing the entire build output.
-$(BIN): $(OBJS) $(MAKEFILE_LIST) | $(EMPTY_TARGET)
+$(BIN): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
 	$(if $(Q),@echo "$(LD_TOOL_STR) $(notdir $@)")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(BIN) $(OBJS) $(LIBS_FLAGS)
 

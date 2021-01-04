@@ -3,14 +3,18 @@ Cleaning 'dynamic' order=[dynamic dynlib_tester]
 Cleaning 'dyn_tester'
 Cleaning 'static'
 Cleaning 'prog' order=[__pre_build prog __post_build]
-Cleaning 'prog2'
+Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'prog2_dynlib'
 Building 'simple-build-system' order=[dynlib staticlib simple-build-system prog prog2]
 Building 'dynamic' order=[dynamic dynlib_tester]
 Building 'dyn_tester'
 Building 'static'
 Building 'prog' order=[__pre_build prog __post_build]
-Building 'prog2'
+Building 'prog2' order=[prog2_dynlib prog2]
+Building 'prog2_dynlib'
 function=dynlib_func0, DYNLIB_DEF=10 PROJECT_DEF=1
 function=staticlib_func0
 function=staticlib_additional_func0
 function=dynlib_func0, DYNLIB_DEF=10 PROJECT_DEF=1
+log(16)=2
+function=prog2_dynlib_func0, PROJECT_DEF=1

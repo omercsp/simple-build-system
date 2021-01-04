@@ -12,6 +12,10 @@ MODULE_IGNORE_PROJECT_ABS_LIB_DIRS := 1
 MODULE_IGNORE_PROJECT_INCLUDE_DIRS := 1
 MODULE_IGNORE_PROJECT_ABS_INCLUDE_DIRS := 1
 MODULE_USE_PTHREAD := 1
+MODULE_PRE_MODULES := prog2_dynlib
+MODULE_LIB_DIRS := prog2_dynlib/obj/dbg
+MODULE_LIBS := prog2_dynlib
+MODULE_BIN_DEPS := prog2_dynlib/obj/dbg/libprog2_dynlib.so
 
 include ../module.inc.mk
 
