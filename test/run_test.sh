@@ -2,35 +2,56 @@
 SCRIPT_PATH=$(readlink -f ${BASH_SOURCE[0]})
 SBS_TEST_DIR=$(dirname ${SCRIPT_PATH})
 SBS_DIR=${SBS_TEST_DIR}/..
-SBS_BINARIES_TEST_DIR=${SBS_TEST_DIR}/binaries
-SBS_ORDER_TEST_DIR=${SBS_TEST_DIR}/order
+SBS_MODULE_INC_MK_FNAME=module.inc.mk
+SBS_MODULE_INC_FILE=${SBS_DIR}/${SBS_MODULE_INC_MK_FNAME}
+
+_setup_module_inc_mk()
+{
+	local dir=${1}
+	local file=${dir}/${SBS_MODULE_INC_MK_FNAME}
+
+	if [[ -z ${dir} ]]; then
+		echo "Missing direcotry argument"
+		return 1
+	fi
+
+	if [[ ! -d ${dir} ]]; then
+		echo "Directory argument '${dir}' isn't a directory"
+		return 1
+	fi
+	[[ ${file} -ef ${SBS_MODULE_INC_FILE} ]] && return
+	rm -f ${file}
+	# Using hard links so when developing, there's no confusion
+	ln ${SBS_MODULE_INC_FILE} ${file}
+}
 
 outfile=$(mktemp)
-cp ${SBS_DIR}/module.inc.mk ${SBS_BINARIES_TEST_DIR}
-cd ${SBS_BINARIES_TEST_DIR}
+if [[ -n $* ]]; then
+	test_dirs=($*)
+else
+	test_dirs=("binaries" "order")
+fi
+for d in ${test_dirs[@]}; do
+	test_dir=${SBS_TEST_DIR}/${d}
+	echo "Running test defined at '${d}'"
+	_setup_module_inc_mk ${test_dir}
+	if [[ ${SBS_TEST_VERBOSE} -eq 1 ]]; then
+		${test_dir}/run_test.sh | tee ${outfile}
+		ret=$?
+	else
+		${test_dir}/run_test.sh &> ${outfile}
+		ret=$?
+	fi
+	if [[ ${ret} -ne 0 ]]; then
+		echo "error running test at '${d}'"
+		echo "----------------------------"
+		cat ${outfile}
+		echo "----------------------------"
+		exit 1
+	fi
 
-set -e
-echo "Cleaning binaries"
-make -j clean  | grep -E "^Cleaning" > ${outfile}
-echo "Building binaries"
-make -j | grep -E "^Building" >> ${outfile}
-echo "Checking binaries output"
+	diff -u ${test_dir}/expected_output.txt ${outfile} || exit 1
+	[[ ${SBS_TEST_VERBOSE} -eq 1 ]] && echo
+done
 
-export LD_LIBRARY_PATH=${SBS_BINARIES_TEST_DIR}/lib
-
-${SBS_BINARIES_TEST_DIR}/prog/obj/dbg/prog >> ${outfile}
-${SBS_BINARIES_TEST_DIR}/dynlib/dynlib_tester/obj/dbg/dyn_tester >> ${outfile}
-
-export LD_LIBRARY_PATH=${SBS_BINARIES_TEST_DIR}/prog2/prog2_dynlib/obj/dbg
-${SBS_BINARIES_TEST_DIR}/prog2/obj/dbg/prog2 >> ${outfile}
-
-diff -u ${SBS_TEST_DIR}/expected_binaries_output.txt ${outfile}
-
-cp ${SBS_DIR}/module.inc.mk ${SBS_ORDER_TEST_DIR}
-cd ${SBS_ORDER_TEST_DIR}
-echo "Cleaning build-order"
-make -j clean | sed -e 's/00./00X/g' &> ${outfile}
-echo "Building build-order"
-make -j | sed -e 's/00./00X/g' &>> ${outfile}
-echo "Testing build-order output"
-diff -u ${SBS_TEST_DIR}/expected_order_output.txt ${outfile}
+rm ${outfile}
