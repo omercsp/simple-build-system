@@ -16,7 +16,7 @@ echo
 
 echo "Checking binaries output"
 echo "------------------------"
-export LD_LIBRARY_PATH=${here}/lib
+export LD_LIBRARY_PATH=${here}/lib/dbg
 
 prog/obj/dbg/prog
 dynlib/dynlib_tester/obj/dbg/dyn_tester
