@@ -228,11 +228,11 @@ endif
 # target (or such). Here we make sure we control the make behaviour
 .DEFAULT_GOAL := all
 .PHONY: all clean $(CLEAN_TARGET)
-.PHONY: $(MODULE_PRE_MODULES) $(MODULE_SUB_MODULES) $(MODULE_POST_MODULES) $(SUB_MODULES_CLEAN)
+.PHONY: $(MODULE_PRE_SUB_MODULES) $(MODULE_SUB_MODULES) $(MODULE_POST_SUB_MODULES) $(SUB_MODULES_CLEAN)
 
-BUILD_ORDER := $(strip $(MODULE_PRE_BUILD) $(MODULE_PRE_MODULES))
+BUILD_ORDER := $(strip $(MODULE_PRE_BUILD) $(MODULE_PRE_SUB_MODULES))
 BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_NAME) $(MODULE_SUB_MODULES)))
-BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_POST_BUILD) $(MODULE_POST_MODULES)))
+BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_POST_BUILD) $(MODULE_POST_SUB_MODULES)))
 ifneq ($(BUILD_ORDER),$(MODULE_NAME))
 ORDER_STR := " order=[$(BUILD_ORDER)]"
 endif
@@ -240,15 +240,15 @@ endif
 all:
 	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
 	@$(foreach t,$(MODULE_PRE_BUILD), $(MAKE) $(t);)
-	@$(foreach t,$(MODULE_PRE_MODULES), $(MAKE) -C $(t);)
+	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t);)
 	@$(MAKE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
-	@$(foreach t,$(MODULE_POST_MODULES), $(MAKE) -C $(t);)
+	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t);)
 	@$(foreach t,$(MODULE_POST_BUILD), $(MAKE) $(t);)
 
 clean:
 	@echo "Cleaning '$(MODULE_NAME)'$(ORDER_STR)"
 	@$(foreach t,$(MODULE_PRE_CLEAN), $(MAKE) $(t);)
-	@$(foreach t,$(MODULE_PRE_MODULES), $(MAKE) -C $(t) clean;)
+	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t) clean;)
 	@$(MAKE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
-	@$(foreach t,$(MODULE_POST_MODULES), $(MAKE) -C $(t) clean;)
+	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t) clean;)
 	@$(foreach t,$(MODULE_POST_CLEAN), $(MAKE) $(t);)
