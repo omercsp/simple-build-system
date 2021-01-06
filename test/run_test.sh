@@ -29,7 +29,7 @@ outfile=$(mktemp)
 if [[ -n $* ]]; then
 	test_dirs=($*)
 else
-	test_dirs=("binaries" "order")
+	test_dirs=("tutorial" "binaries" "order")
 fi
 for d in ${test_dirs[@]}; do
 	test_dir=${SBS_TEST_DIR}/${d}

@@ -1,0 +1,5 @@
+Cleaning 'tutorial'
+Building 'tutorial'
+CC main.o
+LD tutorial
+SBS Hello, world!
