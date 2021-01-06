@@ -1,3 +1,5 @@
+include ../config.mk
+
 MODULE_NAME := static
 MODULE_BIN_TYPE := static
 MODULE_LANG := c

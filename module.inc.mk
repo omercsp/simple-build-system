@@ -1,7 +1,6 @@
 PROJECT_ROOT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 MODULE_PATH := $(shell pwd)
 MAKEFLAGS := --no-print-directory
--include $(PROJECT_ROOT_PATH)/config.mk
 
 # If no module name was definedm use the directory as the name
 ifeq ($(MODULE_NAME),)
@@ -19,24 +18,9 @@ ALL_TARGET := $(EMPTY_TARGET)
 ifneq ($(MODULE_OBJS),)
 
 CFLAGS := $(MODULE_CFLAGS) $(SBS_CFLAGS)
-ifneq ($(MODULE_IGNORE_PROJECT_CFLAGS),1)
-CFLAGS := $(PROJECT_CFLAGS) $(CFLAGS)
-endif
-
 CDEFS := $(MODULE_CDEFS) $(SBS_CDEFS)
-ifneq ($(MODULE_IGNORE_PROJECT_CDEFS),1)
-CDEFS := $(PROJECT_CDEFS) $(CDEFS)
-endif
-
 CWARNS := $(MODULE_CWARNS) $(SBS_CWARNS)
-ifneq ($(MODULE_IGNORE_PROJECT_CWARNS),1)
-CWARNS := $(PROJECT_CWARNS) $(CWARNS)
-endif
-
 LDFLAGS := $(MODULE_LDFLAGS) $(SBS_LDFLAGS)
-ifneq ($(MODULE_IGNORE_PROJECT_LDFLAGS),1)
-LDFLAGS := $(PROJECT_LDFLAGS) $(LDFLAGS)
-endif
 
 ifneq ($(MODULE_NO_DEP_FLAGS),1)
 CFLAGS += -MMD -MP
@@ -140,14 +124,8 @@ OBJS_DEPS := $(OBJS:.o=.d)
 BIN := $(MODULE_OBJS_PATH)/$(BIN)
 
 INCLUDE_DIRS := $(MODULE_INCLUDE_DIRS)
-ifneq ($(MODULE_IGNORE_PROJECT_INCLUDE_DIRS),1)
-INCLUDE_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(PROJECT_INCLUDE_DIRS))
-endif
-
+INCLUDE_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_INCLUDE_DIRS))
 INCLUDE_DIRS += $(MODULE_ABS_INCLUDE_DIRS)
-ifneq ($(MODULE_IGNORE_PROJECT_ABS_INCLUDE_DIRS),1)
-INCLUDE_DIRS += $(PROJECT_ABS_INCLUDE_DIRS)
-endif
 
 ifeq ($(MODULE_CFLAGS_OVERRIDE),)
 CFLAGS += $(addprefix -W,$(CWARNS)) $(addprefix -D,$(CDEFS)) $(addprefix -I,$(INCLUDE_DIRS))
@@ -163,13 +141,8 @@ endif
 # matter.
 ifneq ($(MODULE_BIN_TYPE),static)
 LIB_DIRS := $(MODULE_LIB_DIRS)
-ifneq ($(MODULE_IGNORE_PROJECT_LIB_DIRS),1)
-LIB_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(PROJECT_LIB_DIRS))
-endif
+LIB_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_LIB_DIRS))
 LIB_DIRS += $(MODULE_ABS_LIB_DIRS)
-ifneq ($(MODULE_IGNORE_PROJECT_ABS_LIB_DIRS),1)
-LIB_DIRS += $(PROJECT_ABS_LIB_DIRS)
-endif
 LIBS_FLAGS := $(addprefix -L,$(LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
 endif # Binary that isn't static libraray
 
@@ -183,8 +156,7 @@ CFLAGS := $(strip $(CFLAGS))
 LDFLAGS := $(strip $(LDFLAGS))
 LIBS_FLAGS := $(strip $(LIBS_FLAGS))
 
-
-ifneq ($(filter 1,$(PROJECT_VERBOSE) $(MODULE_VERBOSE) $(SBS_VERBOSE)),1)
+ifneq ($(filter 1,$(MODULE_VERBOSE) $(SBS_VERBOSE)),1)
 Q := @
 endif
 

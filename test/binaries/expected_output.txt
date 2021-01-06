@@ -25,4 +25,4 @@ function=staticlib_func0
 function=staticlib_additional_func0
 function=dynlib_func0, DYNLIB_DEF=10 PROJECT_DEF=1
 log(16)=2
-function=prog2_dynlib_func0, PROJECT_DEF=1
+function=prog2_dynlib_func0

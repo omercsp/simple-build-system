@@ -2,6 +2,6 @@
 
 int prog2_dynlib_func0(void)
 {
-	printf("function=%s, PROJECT_DEF=%d\n", __func__, PROJECT_DEF);
+	printf("function=%s\n", __func__);
 	return 0;
 }
