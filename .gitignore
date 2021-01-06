@@ -1,3 +1,4 @@
 *.o
 *.swp
 obj/
+test/*/module.inc.mk
