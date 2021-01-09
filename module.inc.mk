@@ -59,7 +59,7 @@ endif
 ifeq ($(MODULE_BIN_TYPE), exec)
 LD := $(CC)
 OUTPUT_FLAG := -o
-BIN := $(MODULE_NAME)
+ARTIFACT := $(MODULE_NAME)
 LD_TOOL_STR := LD
 endif
 
@@ -68,7 +68,7 @@ LD=$(CC)
 LDFLAGS += -shared
 CFLAGS += -fpic
 OUTPUT_FLAG := -o
-BIN := lib$(MODULE_NAME).so
+ARTIFACT := lib$(MODULE_NAME).so
 LD_TOOL_STR := LD
 endif
 
@@ -85,7 +85,7 @@ else
 LDFLAGS := rsc
 endif
 
-BIN := lib$(MODULE_NAME).a
+ARTIFACT := lib$(MODULE_NAME).a
 LD_TOOL_STR := AR
 endif
 
@@ -121,7 +121,18 @@ endif
 MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
 OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(strip $(MODULE_OBJS)))
 OBJS_DEPS := $(OBJS:.o=.d)
-BIN := $(MODULE_OBJS_PATH)/$(BIN)
+
+ifeq ($(MODULE_ARTIFACT_DIR),)
+ARTIFACT_DIR := $(MODULE_OBJS_PATH)
+else
+ifeq ($(MODULE_ARTIFACT_DIR_REL),1)
+ARTIFACT_DIR := $(PROJECT_ROOT_PATH)/$(MODULE_ARTIFACT_DIR)
+else
+ARTIFACT_DIR := $(MODULE_ARTIFACT_DIR)
+endif
+endif
+
+ARTIFACT := $(ARTIFACT_DIR)/$(ARTIFACT)
 
 INCLUDE_DIRS := $(MODULE_INCLUDE_DIRS)
 INCLUDE_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_INCLUDE_DIRS))
@@ -163,9 +174,10 @@ endif
 # The empty target is added as an ordered dependency so the binary rule
 # will always require *something* to do. This way we can suprees the 'up to date'
 # messages without silencing the entire build output.
-$(BIN): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
+$(ARTIFACT): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
+	@mkdir -p $(ARTIFACT_DIR)
 	$(if $(Q),@echo "$(LD_TOOL_STR) $(notdir $@)")
-	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(BIN) $(OBJS) $(LIBS_FLAGS)
+	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(LIBS_FLAGS)
 
 $(MODULE_OBJS_PATH)/%.o: $(MODULE_PATH)/%.$(SRC_SUFFIX) $(MAKEFILE_LIST)
 	@mkdir -p $(dir $@)
@@ -177,11 +189,11 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(OBJS_DEPS)
 endif
 
-$(BIN)_clean:
-	$(Q)rm -f $(BIN) $(OBJS) $(OBJS_DEPS)
+$(ARTIFACT)_clean:
+	$(Q)rm -f $(ARTIFACT) $(OBJS) $(OBJS_DEPS)
 
-ALL_TARGET := $(BIN)
-CLEAN_TARGET := $(BIN)_clean
+ALL_TARGET := $(ARTIFACT)
+CLEAN_TARGET := $(ARTIFACT)_clean
 
 endif # None empty target
 ######################### Binary build end #########################

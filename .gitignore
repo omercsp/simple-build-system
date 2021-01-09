@@ -2,3 +2,4 @@
 *.swp
 obj/
 test/*/module.inc.mk
+test/binaries/lib/
