@@ -33,7 +33,7 @@ else
 fi
 for d in ${test_dirs[@]}; do
 	test_dir=${SBS_TEST_DIR}/${d}
-	echo "Running test defined at '${d}'"
+	echo "Running test at '${d}'"
 	_setup_module_inc_mk ${test_dir}
 	if [[ ${SBS_TEST_VERBOSE} -eq 1 ]]; then
 		${test_dir}/run_test.sh | tee ${outfile}
