@@ -1,5 +1,5 @@
 # Simple Build System
-SBS is a light weight gnu-make build system for GCC c/cpp projects. It is intended for user who wants a not-too-complicated build system that is easy to install and configure without the need to write complex makefiles or require and dependencies. SBS strives to simplicity and ease of, making controlling the build during the development process more simple process of configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
+SBS is a light weight gnu-make build system for GCC c/cpp projects. It is intended for users who want a not-too-complicated build system that is easy to install and configure without the need to write complex makefiles or require any dependencies. SBS strives fir simplicity and ease of use, making most of of the changes in the build during the development process a matter of configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
 
 SBS allows easy configuration of many advanced (and not so advanced) build system aspects, all controlled by easy configuration
 - Compilation and linking flags
