@@ -70,3 +70,6 @@ Browse the SBS repository for more advanced examples.
 
 ## Manual
 Coming soon
+
+## License
+MIT
