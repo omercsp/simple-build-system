@@ -11,5 +11,5 @@ MODULE_PROJ_LIB_DIRS := lib
 MODULE_LIBS := prog2_dynlib
 MODULE_BIN_DEPS := prog2_dynlib/obj/dbg/libprog2_dynlib.so
 
-include ../module.inc.mk
+include ../../../module.inc.mk
 

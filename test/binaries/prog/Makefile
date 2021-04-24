@@ -13,5 +13,5 @@ $(MODULE_PRE_BUILD):
 $(MODULE_POST_BUILD):
 	@true
 
-include ../module.inc.mk
+include ../../../module.inc.mk
 

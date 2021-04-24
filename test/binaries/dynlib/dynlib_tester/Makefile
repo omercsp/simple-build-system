@@ -5,5 +5,4 @@ MODULE_OBJS := main.o
 MODULE_LIBS := dynamic
 MODULE_FLAV := dbg
 
-include ../../module.inc.mk
-
+include ../../../../module.inc.mk

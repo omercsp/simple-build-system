@@ -1,1 +1,1 @@
-include ../module.inc.mk
+include ../../../module.inc.mk

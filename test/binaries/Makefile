@@ -8,4 +8,4 @@ test:
 	@test/run_test.sh
 .PHONY: test
 
-include module.inc.mk
+include ../../module.inc.mk
