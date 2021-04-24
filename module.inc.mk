@@ -136,7 +136,6 @@ ARTIFACT := $(ARTIFACT_DIR)/$(ARTIFACT)
 
 INCLUDE_DIRS := $(MODULE_INCLUDE_DIRS)
 INCLUDE_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_INCLUDE_DIRS))
-INCLUDE_DIRS += $(MODULE_ABS_INCLUDE_DIRS)
 
 ifeq ($(MODULE_CFLAGS_OVERRIDE),)
 CFLAGS += $(addprefix -W,$(CWARNS)) $(addprefix -D,$(CDEFS)) $(addprefix -I,$(INCLUDE_DIRS))
@@ -153,7 +152,6 @@ endif
 ifneq ($(MODULE_BIN_TYPE),static)
 LIB_DIRS := $(MODULE_LIB_DIRS)
 LIB_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_LIB_DIRS))
-LIB_DIRS += $(MODULE_ABS_LIB_DIRS)
 LIBS_FLAGS := $(addprefix -L,$(LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
 endif # Binary that isn't static libraray
 
