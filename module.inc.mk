@@ -48,11 +48,12 @@ endif
 EXEC_BIN_TYPE := exec
 SHARED_BIN_TYPE := shared
 STATIC_BIN_TYPE := static
+NONE_BIN_TYPE := none
 ifeq ($(MODULE_BIN_TYPE), )
 MODULE_BIN_TYPE := $(EXEC_BIN_TYPE)
 endif
 
-ifeq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE) $(STATIC_BIN_TYPE)),)
+ifeq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE) $(STATIC_BIN_TYPE) $(NONE_BIN_TYPE)),)
 $(error Unkonwn module type $(MODULE_BIN_TYPE))
 endif
 
@@ -173,9 +174,11 @@ endif
 # will always require *something* to do. This way we can suppress the 'up to date'
 # messages without silencing the entire build output.
 $(ARTIFACT): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
+ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
 	$(if $(Q),@echo "$(LD_TOOL_STR) $(notdir $@)")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(LIBS_FLAGS)
+endif
 
 $(MODULE_OBJS_PATH)/%.o: $(MODULE_PATH)/%.$(SRC_SUFFIX) $(MAKEFILE_LIST)
 	@mkdir -p $(dir $@)
@@ -187,8 +190,12 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(OBJS_DEPS)
 endif
 
+CLEAN_FILES := $(OBJS) $(OBJS_DEPS)
+ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
+CLEAN_FILES += $(ARTIFACT)
+endif
 $(ARTIFACT)_clean:
-	$(Q)rm -f $(ARTIFACT) $(OBJS) $(OBJS_DEPS)
+	$(Q)rm -f $(CLEAN_FILES)
 
 ALL_TARGET := $(ARTIFACT)
 CLEAN_TARGET := $(ARTIFACT)_clean
