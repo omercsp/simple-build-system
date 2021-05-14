@@ -52,8 +52,8 @@ First, lets build the project by running make. It there are no complication erro
 ```
 project $ make
 Building 'my_prog'
-CC main.o
-LD my_prog
+CC	main.o
+LD	my_prog
 project $
 ```
 

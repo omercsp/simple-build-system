@@ -27,21 +27,25 @@ CFLAGS += -MMD -MP
 endif
 
 # Handle language
-C_LANG := c
-CPP_LANG := cpp
+C_LANG:= c
+CXX_LANG := cpp
 ifeq ($(MODULE_LANG),)
 MODULE_LANG := $(C_LANG)
 endif
-ifeq ($(filter $(MODULE_LANG), $(C_LANG) $(CPP_LANG)),)
+ifeq ($(filter $(MODULE_LANG), $(C_LANG) $(CXX_LANG)),)
 $(error Unkonwn module language $(MODULE_LANG))
 endif
 
-ifeq ($(MODULE_LANG),cpp)
-CC := g++
-SRC_SUFFIX := cpp
-else
-CC := gcc
-SRC_SUFFIX := c
+ifeq ($(MODULE_LANG),$(C_LANG))
+ifeq ($(MODULE_C_SUFFIXES),)
+MODULE_C_SUFFIXES := c
+endif
+endif
+
+ifeq ($(MODULE_LANG),$(CXX_LANG))
+ifeq ($(MODULE_CXX_SUFFIXES),)
+MODULE_CXX_SUFFIXES := cpp cxx cc
+endif
 endif
 
 # Handle binary type
@@ -57,21 +61,23 @@ ifeq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE) $(STATIC_
 $(error Unkonwn module type $(MODULE_BIN_TYPE))
 endif
 
-ifeq ($(MODULE_BIN_TYPE), exec)
-LD := $(CC)
+ifneq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE)),) # Executable or shared
 OUTPUT_FLAG := -o
-ARTIFACT := $(MODULE_NAME)
 LD_TOOL_STR := LD
+ifeq ($(MODULE_LANG),$(C_LANG))
+LD := gcc
+else
+LD := g++
 endif
 
-ifeq ($(MODULE_BIN_TYPE), shared)
-LD=$(CC)
+ifeq ($(MODULE_BIN_TYPE), exec)
+ARTIFACT := $(MODULE_NAME)
+else
 LDFLAGS += -shared
 CFLAGS += -fpic
-OUTPUT_FLAG := -o
 ARTIFACT := lib$(MODULE_NAME).so
-LD_TOOL_STR := LD
 endif
+endif # Executable or shared
 
 # ar options:
 # r - insert object to archive
@@ -176,14 +182,22 @@ endif
 $(ARTIFACT): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
 ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
-	$(if $(Q),@echo "$(LD_TOOL_STR) $(notdir $@)")
+	$(if $(Q),@echo -e "$(LD_TOOL_STR)\t$(notdir $@)")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(LIBS_FLAGS)
 endif
 
-$(MODULE_OBJS_PATH)/%.o: $(MODULE_PATH)/%.$(SRC_SUFFIX) $(MAKEFILE_LIST)
-	@mkdir -p $(dir $@)
-	$(if $(Q),@echo "CC $(notdir $@)")
-	$(Q)$(CC) $(CFLAGS) -c $< -o $@
+# $1 - source suffix
+# $2 - compiler print string (CC or CXX)
+# $3 - compiler binary (gcc or g++)
+define CreateSourceRule
+$$(MODULE_OBJS_PATH)/%.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
+	@mkdir -p $$(dir $$@)
+	$$(if $$(Q),@echo -e "$2\t$$(notdir $$@)")
+	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
+endef
+
+$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CC,gcc)))
+$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CXX,g++)))
 
 # Include objects dependencies settings if such exist
 ifneq ($(MAKECMDGOALS),clean)
