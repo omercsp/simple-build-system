@@ -1,16 +1,16 @@
 Cleaning build-order-test
-Cleaning 'order' order=[pre_order order unordered0 unordered1 unordered2 post_order]
+Cleaning 'order' order=[pre_order unordered0 unordered1 unordered2 post_order]
 Cleaning 'pre_order'
-Cleaning 'Unordered00X' order=[sleeper Unordered00X]
-Cleaning 'Unordered00X' order=[sleeper Unordered00X]
-Cleaning 'Unordered00X' order=[sleeper Unordered00X]
+Cleaning 'Unordered00X' order=[sleeper]
+Cleaning 'Unordered00X' order=[sleeper]
+Cleaning 'Unordered00X' order=[sleeper]
 Cleaning 'post_order'
 Building build-order-test
-Building 'order' order=[pre_order order unordered0 unordered1 unordered2 post_order]
+Building 'order' order=[pre_order unordered0 unordered1 unordered2 post_order]
 Building 'pre_order'
-Building 'Unordered00X' order=[sleeper Unordered00X]
-Building 'Unordered00X' order=[sleeper Unordered00X]
-Building 'Unordered00X' order=[sleeper Unordered00X]
+Building 'Unordered00X' order=[sleeper]
+Building 'Unordered00X' order=[sleeper]
+Building 'Unordered00X' order=[sleeper]
 Done building Unordered00X
 Done building Unordered00X
 Done building Unordered00X
