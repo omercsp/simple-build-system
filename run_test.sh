@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_PATH=$(readlink -f ${BASH_SOURCE[0]})
-SBS_TEST_DIR=$(dirname ${SCRIPT_PATH})
+SBS_TEST_DIR=$(dirname ${SCRIPT_PATH})/test
 
 outfile=$(mktemp)
 if [[ -n $* ]]; then
