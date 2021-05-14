@@ -1,6 +1,6 @@
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin binaries prog prog2]
+Cleaning 'binaries' order=[dynlib staticlib nobin prog prog2]
 Cleaning 'dynamic' order=[dynamic dynlib_tester]
 Cleaning 'dyn_tester'
 Cleaning 'static'
@@ -11,7 +11,7 @@ Cleaning 'prog2_dynlib'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin binaries prog prog2]
+Building 'binaries' order=[dynlib staticlib nobin prog prog2]
 Building 'dynamic' order=[dynamic dynlib_tester]
 Building 'dyn_tester'
 Building 'static'
