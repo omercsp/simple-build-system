@@ -1,9 +1,7 @@
-#include <sbstest-base.h>
-
-#include <stdlib.h>
 #include "prog2_dynlib/prog2_dynlib.h"
-
+#include <sbstest-base.h>
 #include <math.h>
+#include <stdlib.h>
 
 class MyClass {
 public:
