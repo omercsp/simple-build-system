@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <sbstest-base.h>
 #include <stdlib.h>
 
 #include <static.h>
@@ -6,8 +6,10 @@
 
 int main(int argc, char **argv)
 {
-	dynlib_func0();
-	staticlib_func0();
-	staticlib_additional_func0();
+	pr_start();
+	call_func(dynlib_func0);
+	call_func(staticlib_func0);
+	call_func(staticlib_additional_func0);
+	pr_end();
 	return EXIT_SUCCESS;
 }

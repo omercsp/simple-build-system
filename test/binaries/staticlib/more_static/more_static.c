@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include <sbstest-base.h>
 
 #include "../static.h"
 
 int staticlib_additional_func0(void)
 {
-	printf("function=%s\n", __func__);
+	pr_info("\n");
 	return 0;
 }

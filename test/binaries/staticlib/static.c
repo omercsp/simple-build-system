@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <sbstest-base.h>
 
 int staticlib_func0(void)
 {
-	printf("function=%s\n", __func__);
+	pr_info("\n");
 	return 0;
 }
