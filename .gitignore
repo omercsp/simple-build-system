@@ -3,3 +3,5 @@
 obj/
 test/*/module.inc.mk
 test/binaries/lib/
+.cache/
+compile_commands.json

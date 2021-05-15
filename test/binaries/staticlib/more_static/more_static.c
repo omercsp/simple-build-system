@@ -1,6 +1,5 @@
-#include <sbstest-base.h>
-
 #include "../static.h"
+#include <sbstest-base.h>
 
 int staticlib_additional_func0(void)
 {
