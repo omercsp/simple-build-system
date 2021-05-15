@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <sbstest-base.h>
+
 #include <stdlib.h>
 #include "prog2_dynlib/prog2_dynlib.h"
 
@@ -19,9 +20,9 @@ private:
 int main(int argc, char **argv)
 {
 	MyClass o(16);
-
-	printf("log(16)=%d\n", (int) log(o.val()));
-	prog2_dynlib_func0();
-
+	pr_start();
+	pr_info("log(16)=%d\n", (int) log(o.val()));
+	call_func(prog2_dynlib_func0);
+	pr_end();
 	return EXIT_SUCCESS;
 }

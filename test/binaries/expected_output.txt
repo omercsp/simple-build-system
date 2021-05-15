@@ -22,9 +22,23 @@ Building 'prog2_dynlib'
 
 Checking binaries output
 ------------------------
-function=dynlib_func0, DYNLIB_DEF=10 PROJECT_DEF=1
-function=staticlib_func0
-function=staticlib_additional_func0
-function=dynlib_func0, DYNLIB_DEF=10 PROJECT_DEF=1
-log(16)=2
-function=prog2_dynlib_func0
+sbs-test [main:9]: Starting prog
+sbs-test [main:10]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:11]: Calling staticlib_func0
+sbs-test [staticlib_func0:5]: 
+sbs-test [main:12]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]: 
+sbs-test [main:13]: Ending prog
+
+sbs-test [main:8]: Starting dyn_tester
+sbs-test [main:9]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:10]: Ending dyn_tester
+
+sbs-test [main:21]: Starting prog2
+sbs-test [main:22]: log(16)=2
+sbs-test [main:23]: Calling prog2_dynlib_func0
+sbs-test [prog2_dynlib_func0:5]: 
+sbs-test [main:24]: Ending prog2
+
