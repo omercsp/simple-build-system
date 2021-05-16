@@ -1,5 +1,5 @@
 MODULE_NAME := "Unordered002"
-MODULE_PRE_BUILD := sleeper
+MODULE_POST_BUILD := sleeper
 
 empty:
 	@:
