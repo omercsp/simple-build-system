@@ -157,7 +157,7 @@ LIBS_FLAGS := $(addprefix -L,$(LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
 endif # Binary that isn't static library
 
 # Handle linking flags overrides/additions
-ifneq ($(MODULE_LDLAGS_OVERRIDE),)
+ifneq ($(MODULE_LDFLAGS_OVERRIDE),)
 LDFLAGS := $(MODULE_LDFLAGS_OVERRIDE)
 endif
 
