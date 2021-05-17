@@ -6,12 +6,12 @@ cd ${here}
 set -e
 echo "Cleaning binaries"
 echo "-----------------"
-make -j clean  | grep -E "^Cleaning"
+make -j clean  | grep -E "^Cleaning" | sort
 echo
 
 echo "Building binaries"
 echo "-----------------"
-make -j | grep -E "^Building"
+make -j | grep -E "^Building" | sort
 echo
 
 echo "Checking binaries output"

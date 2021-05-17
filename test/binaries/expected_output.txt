@@ -3,24 +3,24 @@ Cleaning binaries
 Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog prog2]
 Cleaning 'dynamic' order=[dynamic dynlib_tester]
 Cleaning 'dyn_tester'
-Cleaning 'static'
-Cleaning 'nobin'
 Cleaning 'multi-lang'
-Cleaning 'prog' order=[__pre_build prog __post_build]
-Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'nobin'
 Cleaning 'prog2_dynlib'
+Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'prog' order=[__pre_build prog __post_build]
+Cleaning 'static'
 
 Building binaries
 -----------------
 Building 'binaries' order=[dynlib staticlib nobin multi-lang prog prog2]
 Building 'dynamic' order=[dynamic dynlib_tester]
 Building 'dyn_tester'
-Building 'static'
-Building 'nobin'
 Building 'multi-lang'
-Building 'prog' order=[__pre_build prog __post_build]
-Building 'prog2' order=[prog2_dynlib prog2]
+Building 'nobin'
 Building 'prog2_dynlib'
+Building 'prog2' order=[prog2_dynlib prog2]
+Building 'prog' order=[__pre_build prog __post_build]
+Building 'static'
 
 Checking binaries output
 ------------------------

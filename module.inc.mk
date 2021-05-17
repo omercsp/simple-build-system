@@ -245,18 +245,64 @@ ORDER_STR := " order=[$(BUILD_ORDER)]"
 endif
 endif
 
+############################################################################
+############################################################################
+### The following macros are used to generate rules so pre/post sub-module and build targets can
+### built in parallel. In all the macros:
+# $1 - the rule name,
+# $2 - the rule dependencies
+
+# Generate rule with dependencies
+define CreateSubTargetRule
+$1: $2
+	@true
+endef
+
+# Generate rule from sub-modules dependencies. For each dependency <DEP>, a recipe  of
+# 'make -C <DEP>' is generated.
+define CreateSubModuleRule
+ifneq ($2,)
+$2:
+	@$$(MAKE) -C $$@
+endif
+$(call CreateSubTargetRule,$1,$2)
+endef
+
+# Generate rule from sub-modules dependencies for clean targets. For each dependency <DEP>, a recipe
+# of 'make -C <DEP> clean' is generated.
+define CreateSubModuleCleanRule
+ifneq ($2,)
+$(addsuffix __sbs_clean_,$2):
+	@$$(MAKE) -C $$(@:__sbs_clean_=) clean
+endif
+$(call CreateSubTargetRule,$1,$(addsuffix __sbs_clean_,$2))
+endef
+############################################################################
+############################################################################
+
+$(eval $(call CreateSubTargetRule,__sbs_pre_build, $(MODULE_PRE_BUILD)))
+$(eval $(call CreateSubModuleRule,__sbs_pre_sub_modules,$(MODULE_PRE_SUB_MODULES)))
+$(eval $(call CreateSubModuleRule,__sbs_post_sub_modules,$(MODULE_POST_SUB_MODULES)))
+$(eval $(call CreateSubTargetRule,__sbs_post_build,$(MODULE_POST_BUILD)))
+
 all:
 	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_BUILD), $(MAKE) $(t);)
-	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t);)
+	@$(MAKE) __sbs_pre_build
+	@$(MAKE) __sbs_pre_sub_modules
 	@$(MAKE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
-	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t);)
-	@$(foreach t,$(MODULE_POST_BUILD), $(MAKE) $(t);)
+	@$(MAKE) __sbs_post_sub_modules
+	@$(MAKE) __sbs_post_build
+
+
+$(eval $(call CreateSubTargetRule,__sbs_pre_clean, $(MODULE_PRE_CLEAN)))
+$(eval $(call CreateSubModuleCleanRule,__sbs_pre_sub_modules_clean,$(MODULE_PRE_SUB_MODULES)))
+$(eval $(call CreateSubModuleCleanRule,__sbs_post_sub_modules_clean,$(MODULE_POST_SUB_MODULES)))
+$(eval $(call CreateSubTargetRule,__sbs_post_clean,$(MODULE_POST_CLEAN)))
 
 clean:
 	@echo "Cleaning '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_CLEAN), $(MAKE) $(t);)
-	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t) clean;)
+	@$(MAKE) __sbs_pre_clean
+	@$(MAKE) __sbs_pre_sub_modules_clean
 	@$(MAKE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
-	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t) clean;)
-	@$(foreach t,$(MODULE_POST_CLEAN), $(MAKE) $(t);)
+	@$(MAKE) __sbs_post_sub_modules_clean
+	@$(MAKE) __sbs_post_clean
