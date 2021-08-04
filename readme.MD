@@ -34,13 +34,13 @@ Place the `module.inc.mk` file in the `project` folder.
 Now it's time to tell SBS what to build and how. In order to so, add a Makefile to the same directory. No worries, it's going to be much smaller and much simpler than your usual Makefile. No rules are required, just very basic settings so SBS will know what to do. Only 3 lines are needed:
 
 1. The name of the binary we want to build
-2. List of objects to compile and link, in our example, a single object file.
+2. List of source files to compile and link, in our example, a single source file - `main.c`.
 3. Inclusion of the `module.inc.mk` file placed in our directory in the installation phase.
 
 Here's how such a Makefile will look:
 ```makefile
 MODULE_NAME := my_prog
-MODULE_OBJS := main.o
+MODULE_SRCS := main.c
 
 include module.inc.mk
 ```
@@ -52,7 +52,7 @@ First, lets build the project by running make. It there are no compilation error
 ```makefile
 project $ make
 Building 'my_prog'
-CC	main.o
+CC	main.c
 LD	my_prog
 project $
 ```
@@ -87,8 +87,7 @@ include ../config.mk
 
 MODULE_NAME := dynamic
 MODULE_BIN_TYPE := shared
-MODULE_LANG := c
-MODULE_OBJS := dynamic.o
+MODULE_SRCS := dynamic.c
 MODULE_CDEFS += DYNLIB_DEF=10
 MODULE_POST_SUB_MODULES := dynlib_tester
 MODULE_VERBOSE := 1
@@ -111,7 +110,7 @@ The module's name setting serves as the base name for the module linked output n
 
 ### Type
 
-A module type defines the artifact type the module will produce. SBS module supports 4 kind of types: executables, dynamic libraries, static libraries and none, which compile all the objects in the module, but will not link them. Default type is executable (See `MODULE_TYPE` setting).
+A module type defines the artifact type the module will produce. SBS module supports 4 kind of types: executables, dynamic libraries, static libraries and none. Bulding a module with a 'none' type which compile all the files in the source list, but will not link them into an artifact. Default type is executable (See `MODULE_TYPE` setting).
 
 ### Flavor
 
@@ -127,22 +126,22 @@ By default, SBS adds compilation flags for header files dependencies generation 
 
 ### Language
 
-SBS supports C and C++ as valid module language. Unless explicitly set, SBS assumes C as the module's language. Module language affects two build characteristics:
+SBS supports C and C++ as valid module language, and tries to compile each source according to its suffix
 
-1. Source file suffixes - When set to C,  'c' suffix is searched as source files. When set to C++, 'cpp' 'cxx' and 'cc' suffixes are searched. These values can be modified with `MODULE_C_SUFFIXES` and `MODULE_CXX_SUFFIXES` settings
-2. The module linker - gcc for C modules and g++ for C++ modules.
+1. Default C suffixes are `c, C`. Modifiable via the `MODULE_C_SUFFIXES` setting.
+2. Default C++ suffixes are `cpp cxx cc CC CXX CPP`. Modifiable via the `MODULE_CXX_SUFFIXES` setting.
 
-(See `MODULE_LANG` setting).
+Mixing of C and C++ is possible.
 
-#### Mixing C and C++ in the same module
+Linkage is either set explicitly by the user using the `MODULE_LD` setting, or is deduced according to the list of source files: If a C++ file is found among the list of source files, The C++ linker is used, otherwise the C linker is used. Choosing a linker should only be used in special cases. Most of the time, allowing SBS to choose the linker will generate the desired behavior.
 
-SBS supports mixing both languages in the same module see the `Makefile.skel` for more details (See `MODULE_LANG` setting).
+(See `MODULE_CXX_SUFFIXES`, `MODULE_C_SUFFIXES` and `MODULE_LD` settings).
 
 ## Sub modules
 
 Each module may define sub-modules that refer to directories to build by invoking `make -C` commands before, during or after the module is built - SBS a provides easy settings to define which and when sub modules are to be built.  Each sub module might be a SBS module, or any other directory with a valid Makefile in it.
 
-A SBS module might serve as a *pseudo* module, with an empty object list but with sub modules defined.
+A SBS module might serve as a *pseudo* module, without any sources to compile but with sub modules defined.
 
 Sub-modules settings allow creating of complex project hierarchies, with complete control over build order. (See `MODULE_SUB_MODULES`, `MODULE_PRE_SUB_MODULES` and `MODULE_PRE_POS_MODULES` settings).
 
@@ -221,17 +220,9 @@ By setting `MODULE_BIN_TYPE`to `none`
 MODULE_BIN_TYPE := none
 ```
 
-### How to change the module language from C to C++?
-
-By setting `MODULE_LANG` to`cpp`
-
-```makefile
-MODULE_LANG := cpp
-```
-
 ### How to set a different file suffix for source file?
 
-By setting `MODULE_C_SUFFIXES` and `MODULE_CXX_SUFFIXES` for C and C++ respectively. For example, to set suffixes for a C++ module (assuming`MODULE_LANG` was set to `cpp` to set the module language to C++) ,with suffixes of `CPP`,  use the following setting:
+By setting `MODULE_C_SUFFIXES` and `MODULE_CXX_SUFFIXES` for C and C++ respectively. For example, to set suffixes for a C++ module with suffixes of `CPP`,  use the following setting:
 
 ```makefile
 MODULE_CXX_SUFFIXES := CPP
