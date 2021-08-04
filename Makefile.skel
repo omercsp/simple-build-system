@@ -16,14 +16,11 @@
 # If MODULE_BIN_TYPE is set to anything but the 4 allowed values, SBS issues an error and quit.
 #MODULE_BIN_TYPE :=
 
-# Space separated list of objects to compile and link to create the module's artifact.
-# Each entry in the list implies a source file in the module's directory. So '<NAME1>.o <NAME2.o'
-# implies source files '<NAME1>.c' and '<NAME2>.c' in the module's directory. (The 'c' suffix here
-# may be replaced with 'cpp', 'cxx' or 'cc' for c++ files).
-# Unless the modules mixes 'c' and 'c++' source files, this setting is straight forward. For details
-# about module's language and suffix setting please see the manual and the MODULE_LANG,
-# MODULE_C_SUFFIXES and MODULE_CXX_SUFFIXES settings.
-#MODULE_OBJS :=
+# Space separated list of source files to compile and link to create the module's artifact.
+# Each entry in the list represnts a source file in the module's directory. Source files files are
+# expected to be with a valid suffix. See the MODULE_C_SUFFIXES and MODULE_CXX_SUFFIXES settings
+# to suffixes settings.
+#MODULE_SRCS :=
 
 # Compilation flags to be added to the each object build. When a dedicated setting is available,
 # like MODULE_INCLUDE_DIRS for adding include directories, it is usually recommended to prefer it
@@ -140,32 +137,16 @@
 # developer wants to add, she can do it through this setting.
 #MODULE_BIN_DEPS :=
 
-# Sets the default module language. Two languages are supported: 'c' and 'cpp'. Determines two build
-# characteristics:
-# 1. The linker identity (gcc or g++)
-# 2. Default source file suffixes to use for source files lookup
-# Usually, there's no need to think about this setting too much. Setting this to the intended module
-# language is sufficient unless C and C++ are mixed in the same module. While generally not a good
-# idea (regardless of SBS or any other build system) and should be avoided, SBS does allow it (read
-# ahead for more details).
-# When one sets MODULE_LANG to 'c', MODULE_C_SUFFIXES defaults to 'c' and MODULE_CXX_SUFFIXES
-# defaults to an empty string. If it MODULE_LANG is 'cpp', MODULE_C_SUFFIXES defaults to an empty
-# string and MODULE_CXX_SUFFIXES defaults to 'cpp cc cxx'. The 'SUFFIXES' settings defines which
-# suffixes SBS will try to match for the defined object files. In order to allow a build with both C
-# and C++, the *other* language suffix is to be set by the user. For example, if the developer
-# builds a C++ based module with some C files included, MODULE_LANG should be set to 'cpp' and
-# MODULE_C_SUFFIXES should be set to 'c' (or whatever other suffix for the C source files she
-# wants). For each object SBS will look for the best match. Multiple suffixes can be set for each
-# language.
-#MODULE_LANG :=
-
-# Sets the source file suffixes that will be uses as C source files. See MODULE_LANG setting
-# documentation for more details.
+# Sets the source file suffixes that will be uses as C source files.
 #MODULE_C_SUFFIXES :=
 
-# Sets the source file suffixes that will be uses as C++ source files. See MODULE_LANG setting
-# documentation for more details.
+# Sets the source file suffixes that will be uses as C++ source files
 #MODULE_CXX_SUFFIXES :=
+
+# Sets the linker tool to be used to creating the artifact. If no tool is defined, SBS will set the
+# linker according to the source files list: If a C++ file is found among the list of source files,
+# the C++ linker is used, otherwise the C linker is used.
+#MODULE_LD :=
 
 # Space separated list of modules (directories) that are to be built when this module is built. For
 # each token <MODULE> in the list a 'make -c <MODULE>' is invoked. If the build is done in parallel

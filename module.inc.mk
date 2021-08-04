@@ -15,7 +15,7 @@ CLEAN_TARGET :=$(EMPTY_TARGET)
 ALL_TARGET := $(EMPTY_TARGET)
 
 ######################### Binary build start #########################
-ifneq ($(MODULE_OBJS),)
+ifneq ($(MODULE_SRCS),)
 
 CFLAGS := $(MODULE_CFLAGS) $(SBS_CFLAGS)
 CDEFS := $(MODULE_CDEFS) $(SBS_CDEFS)
@@ -27,25 +27,12 @@ CFLAGS += -MMD -MP
 endif
 
 # Handle language
-C_LANG:= c
-CXX_LANG := cpp
-ifeq ($(MODULE_LANG),)
-MODULE_LANG := $(C_LANG)
-endif
-ifeq ($(filter $(MODULE_LANG), $(C_LANG) $(CXX_LANG)),)
-$(error Unkonwn module language $(MODULE_LANG))
+ifndef MODULE_C_SUFFIXES
+MODULE_C_SUFFIXES := c C
 endif
 
-ifeq ($(MODULE_LANG),$(C_LANG))
-ifeq ($(MODULE_C_SUFFIXES),)
-MODULE_C_SUFFIXES := c
-endif
-endif
-
-ifeq ($(MODULE_LANG),$(CXX_LANG))
-ifeq ($(MODULE_CXX_SUFFIXES),)
-MODULE_CXX_SUFFIXES := cpp cxx cc
-endif
+ifndef MODULE_CXX_SUFFIXES
+MODULE_CXX_SUFFIXES := cpp cxx cc CC CXX CPP
 endif
 
 # Handle binary type
@@ -62,13 +49,20 @@ $(error Unkonwn module type $(MODULE_BIN_TYPE))
 endif
 
 ifneq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE)),) # Executable or shared
+
+LD := $(MODULE_LD)
+ifeq ($(LD),)
+SOURCE_SUFFIXES := $(suffix $(MODULE_SRCS))
+CXX_SUFFIXES_DOT := $(addsuffix .,$(MODULE_CXX_SUFFIXES))
+ifeq ($(filter $(SOURCE_SUFFIXES),$(CXX_SUFFIXES_DOT)),)
+LD := g++
+else
+LD := gcc
+endif
+endif
+
 OUTPUT_FLAG := -o
 LD_TOOL_STR := LD
-ifeq ($(MODULE_LANG),$(C_LANG))
-LD := gcc
-else
-LD := g++
-endif
 
 ifeq ($(MODULE_BIN_TYPE), exec)
 ARTIFACT := $(MODULE_NAME)
@@ -126,7 +120,8 @@ endif
 endif
 
 MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
-OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(strip $(MODULE_OBJS)))
+OBJS := $(addsuffix .o,$(strip $(MODULE_SRCS)))
+OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(OBJS))
 OBJS_DEPS := $(OBJS:.o=.d)
 
 ifeq ($(MODULE_ARTIFACT_DIR),)
@@ -190,9 +185,9 @@ endif
 # $2 - compiler print string (CC or CXX)
 # $3 - compiler binary (gcc or g++)
 define CreateSourceRule
-$$(MODULE_OBJS_PATH)/%.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
+$$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@echo -e "$2\t$$(notdir $$@)")
+	$$(if $$(Q),@echo -e "$2\t$$(notdir $$<)")
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 endef
 

@@ -1,6 +1,6 @@
 MODULE_NAME := prog2
 MODULE_LANG := cpp
-MODULE_OBJS := main.o
+MODULE_SRCS := main.cpp
 MODULE_LIBS := m
 MODULE_FLAV := dbg
 MODULE_CWARNS := pedantic no-variadic-macros no-gnu-zero-variadic-macro-arguments
