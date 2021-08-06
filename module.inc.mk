@@ -140,8 +140,11 @@ LDFLAGS += -pthread
 endif
 endif
 
+SRCS := $(realpath $(MODULE_SRCS))
+SRCS := $(subst $(MODULE_PATH)/,,$(SRCS))
+
 MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
-OBJS := $(addsuffix .o,$(strip $(MODULE_SRCS)))
+OBJS := $(addsuffix .o,$(strip $(SRCS)))
 OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(OBJS))
 OBJS_DEPS := $(OBJS:.o=.d)
 
@@ -205,15 +208,22 @@ endif
 # $1 - source suffix
 # $2 - compiler print string (CC or CXX)
 # $3 - compiler binary (gcc or g++)
-define CreateSourceRule
+# 1st rule - in-tree source files
+# 2nd rule - out-of-tree source files
+define CreateSourceRules
 $$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@$(ECHO) -e "$2\t$$(notdir $$<)")
+	$$(if $$(Q),@$(ECHO) -e "$2\t$$(subst $$(MODULE_PATH)/,,$$<)")
+	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
+
+$$(MODULE_OBJS_PATH)/%.$1.o: %.$1 $$(MAKEFILE_LIST)
+	@mkdir -p $$(dir $$@)
+	$$(if $$(Q),@$(ECHO) -e "$2\t$$<")
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 endef
 
-$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CC,$(CC))))
-$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CXX,$(CCPP))))
+$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CC,$(CC))))
+$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CXX,$(CCPP))))
 
 # Include objects dependencies settings if such exist
 ifneq ($(MAKECMDGOALS),clean)
