@@ -35,6 +35,25 @@ ifndef MODULE_CXX_SUFFIXES
 MODULE_CXX_SUFFIXES := cpp cxx cc CC CXX CPP
 endif
 
+GCC_SUITE := gcc
+CLANG_SUITE := clang
+
+ifneq ($(MODULE_CSUITE),)
+ifeq ($(filter $(MODULE_CSUITE),$(GCC_SUITE) $(CLANG_SUITE)),)
+$(error Unkonwn compiler suite $(MODULE_CSUITE))
+endif
+else
+MODULE_CSUITE := $(GCC_SUITE)
+endif
+
+ifeq ($(MODULE_CSUITE),$(GCC_SUITE))
+CC := gcc
+CCPP := g++
+else
+CC := clang
+CCPP := clang++
+endif
+
 # Handle binary type
 EXEC_BIN_TYPE := exec
 SHARED_BIN_TYPE := shared
@@ -55,9 +74,9 @@ ifeq ($(LD),)
 SOURCE_SUFFIXES := $(suffix $(MODULE_SRCS))
 CXX_SUFFIXES_DOT := $(addsuffix .,$(MODULE_CXX_SUFFIXES))
 ifeq ($(filter $(SOURCE_SUFFIXES),$(CXX_SUFFIXES_DOT)),)
-LD := g++
+LD := $(CCPP)
 else
-LD := gcc
+LD := $(CC)
 endif
 endif
 
@@ -191,8 +210,8 @@ $$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 endef
 
-$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CC,gcc)))
-$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CXX,g++)))
+$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CC,$(CC))))
+$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRule,$(SUFFIX),CXX,$(CCPP))))
 
 # Include objects dependencies settings if such exist
 ifneq ($(MAKECMDGOALS),clean)
