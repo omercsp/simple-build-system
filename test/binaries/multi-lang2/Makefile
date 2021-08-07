@@ -8,5 +8,7 @@ MODULE_LANG := cpp
 MODULE_C_SUFFIXES := c
 MODULE_CXX_SUFFIXES := cpp c++
 MODULE_INCLUDE_DIRS := $(shell pwd)
+MODULE_CSUITE := clang
+MODULE_VERBOSE := 1
 
 include $(TOP_LEVEL)/module.inc.mk
