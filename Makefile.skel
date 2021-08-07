@@ -29,16 +29,16 @@
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_CFLAGS :=
 
-# Space separated list of gcc/g++ pre-processor definitions. Each <DEFINITION> token in the list is
+# Space separated list of pre-processor definitions. Each <DEFINITION> token in the list is
 # translated to -D<DEFINITION> in the module's objects compilation flags. So a value of 'DEF1
 # DEF2=xxx' will generate a '-DDEF1 -DDEF2=xxx' string in the compilation flags.
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_CDEFS :=
 
-# Space separated list of gcc/g++ warnings. Each <WARN> token in the list is translated to -W<WARN>
+# Space separated list of compiler warnings. Each <WARN> token in the list is translated to -W<WARN>
 # in the module's objects compilation flags. So a value of 'pedantic no-variadic-macros' will
-# generate a '-Wpedantic -Wno-variadic-macros' string in the compilation flags.
-# Overridden by MODULE_CFLAGS_OVERRIDE
+# generate a '-Wpedantic -Wno-variadic-macros' string in the compilation flags.  Overridden by
+# MODULE_CFLAGS_OVERRIDE.
 #MODULE_CWARNS :=
 
 # Space separated list of directories to be searched for header files during preprocessing. Each
@@ -147,6 +147,10 @@
 # linker according to the source files list: If a C++ file is found among the list of source files,
 # the C++ linker is used, otherwise the C linker is used.
 #MODULE_LD :=
+
+# Sets the compiler suite to use. Possible values are 'gcc` and `clang`. Will use the appropriate C 
+# and C++ compilers accordingly. Default is 'gcc'.
+# MODULE_CSUITE :=
 
 # Space separated list of modules (directories) that are to be built when this module is built. For
 # each token <MODULE> in the list a 'make -c <MODULE>' is invoked. If the build is done in parallel
