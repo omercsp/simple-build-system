@@ -1,5 +1,5 @@
 # Simple Build System
-SBS is a light weight build system for C/C++ projects using gnu-make and the gnu compiler suite (gcc/g++). It is intended for users who want a not-too-complicated build system that is easy to install and configure without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
+SBS is a light weight build system for C/C++ projects using gnu-make and the either gnu compilers (gcc/g++) or LLVM compilers (clang/clang++). It is intended for users who want a not-too-complicated build system that is easy to install and configure without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
 
 Partial list of SBS features:
 - Simple compilation and linking settings
@@ -13,7 +13,7 @@ Partial list of SBS features:
 This system was built with and for Linux. It is the only platform SBS was verified for. However, it can probably be adapted to any system with gmake and gcc-like compiler.
 
 ## Dependencies
-Other than Gnu-make and GCC, no additional packages or tools are required.
+Other than Gnu-make and GCC or Clang suite, no additional packages or tools are required.
 
 ## Installation
 Using SBS requires copying a single file - `module.inc.sh` - into the project root directory. From that point it's a matter of configuring the build by writing simple Makefiles. 
@@ -113,7 +113,7 @@ MODULE_ARTIFACT_DIR_REL := 1
 include ../module.inc.mk
 ````
 
-Most of these settings are optional, and used for specific needs. For example, in the Makefile above example, the line `MODULE_CDEFS += DYNLIB_DEF=10` adds a pre-processor definition of `DYNLIB_DEF=10` to the build through a `-DDYNLIB_DEF=10` gcc flag. The `MODULE_POST_SUB_MODULES := dynlib_tester` line defines that once this Makefile (module) is built, a `make -C dynlib_tester` is invoked.
+Most of these settings are optional, and used for specific needs. For example, in the Makefile above example, the line `MODULE_CDEFS += DYNLIB_DEF=10` adds a pre-processor definition of `DYNLIB_DEF=10` to the build through a `-DDYNLIB_DEF=10` flag. The `MODULE_POST_SUB_MODULES := dynlib_tester` line defines that once this Makefile (module) is built, a `make -C dynlib_tester` is invoked.
 
 ## Modules and artifacts
 In SBS terms, a module is a group of source files built by the same Makefile and linked to a single binary referred to as an artifact. At it's simple and most common form, a module contains source files residing in a single folder. However, more complicated setups can place source files in multiple folders. Each module can produce up to 1 target artifact. An artifact is either an executable, static library or a dynamic library. (see `MODULE_BIN_TYPE` setting).
@@ -142,7 +142,7 @@ As one can assume, there are 2 types of artifacts for a module's build: object f
 
 ### Header dependencies
 
-By default, SBS adds compilation flags for header files dependencies generation ('.d', files) for better make behavior on headers modification.  This behavior can be turned off. For more details about headers dependencies generation, consult GCC's documentation. (See `MODULE_NO_DEP_FLAGS` setting).
+By default, SBS adds compilation flags for header files dependencies generation ('.d', files) for better make behavior on headers modification.  This behavior can be turned off. For more details about headers dependencies generation, consult the compiler's documentation. (See `MODULE_NO_DEP_FLAGS` setting).
 
 ### Language
 
@@ -157,7 +157,12 @@ Linkage is either set explicitly by the user using the `MODULE_LD` setting, or i
 
 (See `MODULE_CXX_SUFFIXES`, `MODULE_C_SUFFIXES` and `MODULE_LD` settings).
 
-### Sub modules
+### Compilers
+SBS supports both GCC and Clang as compilers suite. By default, SBS uses GCC as it's compiler suite. To change thisbehavior, set the `MODULE_CSUITE` setting to `clang`.
+
+(See `MODULE_CSUITE` settings).
+
+## Sub modules
 
 Each module may define sub-modules that refer to directories to build. A sub module is any directory that has valid Makefile in it. A sub module can be built before, during or after the module itself is being built. Under the hood, sub modules are built by this done by by invoking `make -C`. SBS a provides settings to define which and when sub modules are built. Each sub module might be a SBS module but it doesn't have to be. Sub-modules settings allow creating of complex project hierarchies, with complete control over build order. For example, consider the following example:
 
@@ -185,7 +190,7 @@ A SBS module might serve as a *pseudo* module, without any sources to compile bu
 
 ### How to add an include directory?
 
-With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>` gcc flag. So a setting of
+With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>` flag. So a setting of
 
 ```makefile
 MODULE_INCLUDE_DIRS := some_dir/include other_dir/inclue
@@ -194,7 +199,7 @@ MODULE_INCLUDE_DIRS := some_dir/include other_dir/inclue
 will yield a `-Isome_dir/include -Iother_dir/inclue` in the module's objects compile command.
 
 ### How to add a preprocessor definition?
-With `MODULE_CDEFS `. Each entry `<DEF>` in the list yields a `-D<DEF>` gcc flag. So a setting of
+With `MODULE_CDEFS `. Each entry `<DEF>` in the list yields a `-D<DEF>` flag. So a setting of
 
 ```makefile
 MODULE_CDEFS := _GNU_SOURCE USE_LOG=0
@@ -204,16 +209,16 @@ will yield a `-D_GNU_SOURCE -DUSE_LOG=0` in the module's objects compile command
 
 ### How to add a compiler warning setting?
 
-With `MODULE_CWARNS `. Each entry `<WARN>` in the list yields a `-W<WARN>` gcc flag. So a setting of
+With `MODULE_CWARNS `. Each entry `<WARN>` in the list yields a `-W<WARN>`  flag. So a setting of
 
 ```makefile
 MODULE_CWARNS := no-import format
 ```
 
-will yield a `-Wno-import -Wformat` in the module's object compile command. See GCC's documentation for possible warning settings.
+will yield a `-Wno-import -Wformat` in the module's object compile command. See the compiler's documentation for possible warning settings.
 
 ### How to add a preprocessor definition?
-With `MODULE_CDEFS `. Each entry `<DEF>` in the list yields a `-D<DEF>` gcc flag. So a setting of
+With `MODULE_CDEFS `. Each entry `<DEF>` in the list yields a `-D<DEF>` flag. So a setting of
 
 ```makefile
 MODULE_CDEFS := _GNU_SORUCE USE_LOG=0
@@ -223,7 +228,7 @@ will yield a `-D_GNU_SORUCE -DUSE_LOG=0` in the module's object compile command.
 
 ### How to add a library to search when linking?
 
-With `MODULE_LIB_DIRS`.  Each directory `<DIR>` in the list yields `-L<DIR>` gcc (linker) flag. So a setting of
+With `MODULE_LIB_DIRS`.  Each directory `<DIR>` in the list yields `-L<DIR>` linker flag. So a setting of
 
 ```makefile
 MODULE_LIB_DIRS := /opt/external_project0 /opt/external_project1
@@ -233,7 +238,7 @@ will yield a `-L/opt/external_project0 -L/opt/external_project1` flags in the li
 
 ### How to add a directory to the libraries search path?
 
-Libraries to link with the module's artifact can be added using `MODULE_LIBS`. Each library `<LIB>` in the list yields a `-l<LIB>` gcc (linker) flag. So a setting of
+Libraries to link with the module's artifact can be added using `MODULE_LIBS`. Each library `<LIB>` in the list yields a `-l<LIB>` linker flag. So a setting of
 
 ```makefile
 MODULE_LIBS := m uuid
