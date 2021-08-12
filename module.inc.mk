@@ -1,4 +1,6 @@
 PROJECT_ROOT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+SHELL := /usr/bin/bash
+ECHO := /usr/bin/echo
 MODULE_PATH := $(shell pwd)
 MAKEFLAGS := --no-print-directory
 
@@ -196,7 +198,7 @@ endif
 $(ARTIFACT): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
 ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
-	$(if $(Q),@echo -e "$(LD_TOOL_STR)\t$(notdir $@)")
+	$(if $(Q),@$(ECHO) -e "$(LD_TOOL_STR)\t$(notdir $@)")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(LIBS_FLAGS)
 endif
 
@@ -206,7 +208,7 @@ endif
 define CreateSourceRule
 $$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@echo -e "$2\t$$(notdir $$<)")
+	$$(if $$(Q),@$(ECHO) -e "$2\t$$(notdir $$<)")
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 endef
 

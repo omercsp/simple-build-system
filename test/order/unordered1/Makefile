@@ -1,5 +1,6 @@
 MODULE_NAME := "Unordered001"
 MODULE_POST_BUILD := sleeper
+SHELL := /usr/bin/bash
 
 empty:
 	@:
