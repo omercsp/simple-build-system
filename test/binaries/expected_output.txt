@@ -1,6 +1,6 @@
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog2]
+Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog2 prog-nobin]
 Cleaning 'dynamic' order=[dynamic dynlib_tester]
 Cleaning 'dyn_tester'
 Cleaning 'static'
@@ -10,10 +10,11 @@ Cleaning 'prog' order=[__pre_build prog __post_build]
 Cleaning 'multi-lang2'
 Cleaning 'prog2' order=[prog2_dynlib prog2]
 Cleaning 'prog2_dynlib'
+Cleaning 'prog_nobin'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog2]
+Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog2 prog-nobin]
 Building 'dynamic' order=[dynamic dynlib_tester]
 Building 'dyn_tester'
 Building 'static'
@@ -23,6 +24,7 @@ Building 'prog' order=[__pre_build prog __post_build]
 Building 'multi-lang2'
 Building 'prog2' order=[prog2_dynlib prog2]
 Building 'prog2_dynlib'
+Building 'prog_nobin'
 
 Checking binaries output
 ------------------------
@@ -39,6 +41,21 @@ sbs-test [main:8]: Starting dyn_tester
 sbs-test [main:9]: Calling dynlib_func0
 sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
 sbs-test [main:10]: Ending dyn_tester
+
+sbs-test [main:10]: Starting prog_nobin
+sbs-test [main:11]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:12]: Calling staticlib_func0
+sbs-test [staticlib_func0:5]: 
+sbs-test [main:13]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]: 
+sbs-test [main:14]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]: 
+sbs-test [main:15]: Calling nobin_func0
+sbs-test [nobin_func0:6]: function=nobin_func0
+sbs-test [main:16]: Calling nobin_func1
+sbs-test [nobin_func1:6]: function=nobin_func1
+sbs-test [main:17]: Ending prog_nobin
 
 sbs-test [main:21]: Starting prog2
 sbs-test [main:22]: log(16)=2
