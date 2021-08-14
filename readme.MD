@@ -1,6 +1,7 @@
 [![Sanity](https://github.com/omercsp/simple-build-system/actions/workflows/sanity.yml/badge.svg?branch=master)](https://github.com/omercsp/simple-build-system/actions/workflows/sanity.yml)
+
 # Simple Build System
-SBS is a light weight build system for C/C++ projects using gnu-make and the either gnu compilers (gcc/g++) or LLVM compilers (clang/clang++). It is intended for users who want a not-too-complicated build system that is easy to install and configure without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
+SBS is a light weight build system for C/C++ projects using gnu-make and the either gnu compilers (gcc/g++) or LLVM compilers (clang/clang++). It is intended for users who want an easy to install and configure build system without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
 
 Partial list of SBS features:
 - Simple compilation and linking settings
@@ -17,7 +18,7 @@ This system was built with and for Linux. It is the only platform SBS was verifi
 Other than Gnu-make and GCC or Clang suite, no additional packages or tools are required.
 
 ## Installation
-Using SBS requires copying a single file - `module.inc.sh` - into the project root directory. From that point it's a matter of configuring the build by writing simple Makefiles. 
+Using SBS requires copying a single file - `module.inc.sh` - into the project root directory. From that point it's a matter of configuring the build by writing simple Makefiles.
 
 ## Quick Start Example
 In a folder named `project`, create a file named `main.c`. Here's a small example for you to paste:
@@ -46,7 +47,7 @@ MODULE_SRCS := main.c
 
 include module.inc.mk
 ```
-And that's it. We're done with setting up the build, and ready to build the project, and run the created executable.
+And that's it. We're done with setting up the build, and ready to build the project, and run the created executable (we could have got away without the 1st line, but it's probably more clear this way).
 
 First, lets build the project by running make. It there are no compilation errors, the output should look something like this:
 ```bash
@@ -73,7 +74,7 @@ project $ tree
 2 directories, 6 files
 ```
 
-A new directory named `obj` was created in the folder. All binary outputs are placed in that folder. A `my_prog` executable binary resides at `obj/dbg/my_prog`. The additional `dbg` folder indicates the build was done with debug flavor. This is the default SBS behavior, and can be changed.
+A new directory named `obj` was created in the folder. All binary outputs are placed in that folder. A `my_prog` executable binary resides at `obj/dbg/my_prog`. The additional `dbg` folder indicates the build was done with debug flavor. This is the default SBS behavior, and can be changed. The `*.d` files you see in the build output are dependency files, which forces source files compilations in case a header dependency has changes. Don't worry if you are unfamiliar with dependency files.
 
 To run your program, invoke `obj/dbg/my_prog` from the project directory:
 
@@ -87,7 +88,7 @@ And that concludes the very basic usage of the build system.
 Browse the SBS repository for more advanced examples.
 
 ## Configuration basics
-Configuration of SBS is done in the Makefiles themselves. For a basic to intermediate use of SBS, no Makefile rules are needed and almost all SBS settings are defined using a gmake `<SETTING> := <VALUE>` syntax, so it is better to think of SBS Makefiles as configuration files rather than traditional Makefiles.
+SBS configuration is done in the Makefiles themselves. For a basic to intermediate use of SBS, no Makefile rules are needed and almost all SBS settings are defined using a gmake `<SETTING> := <VALUE>` syntax, so it is better to think of SBS Makefiles as configuration files rather than traditional Makefiles.
 
 There are quite a few settings, allowing the user to control many aspects of the build. Guidelines and the more common tasks and settings are covered below. **For a full list of possible settings and their documentation, see the `Makefile.skel`**.
 
@@ -117,11 +118,11 @@ include ../module.inc.mk
 Most of these settings are optional, and used for specific needs. For example, in the Makefile above example, the line `MODULE_CDEFS += DYNLIB_DEF=10` adds a pre-processor definition of `DYNLIB_DEF=10` to the build through a `-DDYNLIB_DEF=10` flag. The `MODULE_POST_SUB_MODULES := dynlib_tester` line defines that once this Makefile (module) is built, a `make -C dynlib_tester` is invoked.
 
 ## Modules and artifacts
-In SBS terms, a module is a group of source files built by the same Makefile and linked to a single binary referred to as an artifact. At it's simple and most common form, a module contains source files residing in a single folder. However, more complicated setups can place source files in multiple folders. Each module can produce up to 1 target artifact. An artifact is either an executable, static library or a dynamic library. (see `MODULE_BIN_TYPE` setting).
+In SBS terms, a module is a group of source files built by the same Makefile and (possibly) linked to a single binary referred to as an artifact. At it's simple and most common form, a module contains source files residing in a single folder. However, more complicated setups can place source files in multiple folders. Each module can produce  a single artifact. An artifact is either an executable, static library or a dynamic library. (see `MODULE_BIN_TYPE` setting).
 
 ### Name
 
-The module's name setting serves as the base name for the module linked output name (see type for more details). It also sets as the name SBS uses to output to the console about the build. If no name is set, SBS will use the directory base-name for a module name. So a nameless module that reside in `/dir0/dir1/dir2` will have the name `dir2`.  (see `MODULE_NAME` setting)
+The module's name setting serves as the base name for the module linked output name. It also sets the name SBS uses to output about the build. If no name is set, SBS will use the directory base-name as the module name. So a nameless module that reside in `/dir0/dir1/dir2` will have the name `dir2`.  (see `MODULE_NAME` setting)
 
 ### Type
 
@@ -133,39 +134,35 @@ In SBS terms, a flavor is a predefined set of compilation settings to apply when
 
 ### Build Output
 
-A module build outputs up to 3 types of files 
+A module build outputs up to 3 types of files
 
-1. Object files 
+1. Object files
 2. The target artifact (the executable or library)
-3. Dependency file (See Header dependencies below) 
+3. Dependency file (See Header dependencies below)
 
-As one can assume, there are 2 types of artifacts for a module's build: object files and a binary artifact. By default, all output files reside in `<MODULE_PATH>/obj/<FLAVOR>` , where flavor is determined by `MODULE_FLAVOR`.  The artifact location can be set to any location (See `MODULE_ARTIFACT_DIR` setting).
+By default, all output files reside in `<MODULE_PATH>/obj/<FLAVOR>` , where flavor is determined by `MODULE_FLAVOR`.  The artifact location can be set to any location by setting `MODULE_ARTIFACT_DIR`.
 
 ### Header dependencies
 
-By default, SBS adds compilation flags for header files dependencies generation ('.d', files) for better make behavior on headers modification.  This behavior can be turned off. For more details about headers dependencies generation, consult the compiler's documentation. (See `MODULE_NO_DEP_FLAGS` setting).
+By default, SBS adds compilation flags for header files dependencies generation (`.d`, files) for better build behavior on headers modification.  This behavior can be turned off by setting `MODULE_NO_DEP_FLAGS` value to `1`. For more details about headers dependencies generation, consult the compiler's documentation.
 
 ### Language
 
-SBS supports C and C++ as valid module languages, and tries to compile each source according to its suffix
+SBS supports C and C++ as valid module languages, and tries to compile each source according to its suffix:
 
 1. Default C suffixes are `c` and  `C`. Modifiable via the `MODULE_C_SUFFIXES` setting.
 2. Default C++ suffixes are `cpp`, `cxx`, `cc`, `CC`, `CXX` and `CPP`. Modifiable via the `MODULE_CXX_SUFFIXES` setting.
 
 Mixing of C and C++ in the same module is possible.
 
-Linkage is either set explicitly by the user using the `MODULE_LD` setting, or is deduced according to the list of source files: If a C++ file is found among the list of source files, The C++ linker is used, otherwise the C linker is used. Most of the time, allowing SBS to choose the linker will generate the desired behavior. Choosing a linker should only be used in special cases.
-
-(See `MODULE_CXX_SUFFIXES`, `MODULE_C_SUFFIXES` and `MODULE_LD` settings).
+By default linkage tool is deduced by SBS according to the list of source files: If a C++ file is found among the list of source files, the C++ linker is used, otherwise the C linker is used. Most of the time, allowing SBS to choose the linker will generate the desired behavior, but SBS allows the user to explicitly choose a linker with the `MODULE_LD` setting.
 
 ### Compilers
-SBS supports both GCC and Clang as compilers suite. By default, SBS uses GCC as it's compiler suite. To change thisbehavior, set the `MODULE_CSUITE` setting to `clang`.
-
-(See `MODULE_CSUITE` settings).
+SBS supports both GCC and Clang as compilers suite. By default, SBS uses GCC as it's compiler suite. To change this behavior, set the `MODULE_CSUITE` setting value to `clang`.
 
 ## Sub modules
 
-Each module may define sub-modules that refer to directories to build. A sub module is any directory that has valid Makefile in it. A sub module can be built before, during or after the module itself is being built. Under the hood, sub modules are built by this done by by invoking `make -C`. SBS a provides settings to define which and when sub modules are built. Each sub module might be a SBS module but it doesn't have to be. Sub-modules settings allow creating of complex project hierarchies, with complete control over build order. For example, consider the following example:
+Each module may define sub-modules that refer to directories to build. A sub module is any directory that has valid Makefile in it, so it doesn't have to be a SBS module by itself. A sub module can be built before, during or after the parent module itself is built. Under the hood, sub modules are built by  invoking `make -C`. SBS a provides settings to define which and when sub modules are built. Sub-modules settings allow creating of complex project hierarchies, with complete control over build order. For example, consider the following example:
 
 ```makefile
 MODULE_SRCS := main.cpp
@@ -252,7 +249,7 @@ will yield a `-lm -luuid` flags in the link command.
 A module artifact type is defined its `MODULE_BIN_TYPE` setting. Setting it to `static` or `shared` will create static or dynamic libraries respectively. The module's artifact name will be `lib<MODULE_NAME>.a` for static libraries and `lib<MODULE_NAME>.so` for dynamic libraries.
 
 - Dynamic library setting implies `-fPIC` compilation flag and `-shared` link flag.
-- Static libraries setting implies usage of `ar` for the linking.
+- Static libraries setting implies usage of `ar` for the linking step.
 
 ### Is it possible to create a module that only compile objects but doesn't link a target?
 
@@ -312,7 +309,7 @@ sm0: sm1
 Pre and post sub modules are built in the order they are specified one by one.
 
 ### How to include the `module.inc.mk` file from a all SBS modules Makefiles?
-SBS can't determine the location of the `module.inc.mk` relatively to the current module location. It is to the user to set,  and the `module.inc.mk` inclusion from each SBS Makefile of can be different.
+SBS can't determine the location of the `module.inc.mk` relatively to the current module location. It is for the user to set,  and the `module.inc.mk` inclusion path from each SBS Makefile of can be different.
 
 Some solutions are available, however, using external tools. For example, with git, it is a good idea to place the `module.inc.mk` next to the `.git` directory, and use git to determine this location, so the following snippet can be used throughout all the modules within a given project:
 
