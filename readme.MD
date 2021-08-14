@@ -128,6 +128,15 @@ The module's name setting serves as the base name for the module linked output n
 
 A module type defines the artifact type build will produce. SBS module supports 4 kind of types: executables, dynamic libraries, static libraries and none. A `none` build type will compile all the files in the source list, but will not link them into an artifact. Default type is executable (See `MODULE_TYPE` setting).
 
+### Source files
+
+Source files for a module are defined with the `MODULE_SRCS` settings. It's a space separated list of files to be built. All source files must have a source suffix of either C or C++. (e.g. `c`, or `cpp`). See the [language](#language) section for more details about source files suffixes.
+
+Source files can reside anywhere, as long as they accesible. SBS treats diffrently to source files that are inside or outside of the module directory. Both types of files correspondig object files will reside inside the module's `obj` direcotry, so a source file can be compiled multiple times in different modules, possibly with different compilation flags, and differet objects will be created for them on each module. Directory structure wise.
+
+#### White space in source names and paths
+Due to gnu-Make limitations, SBS doesn't support source file with names or paths that contain white spaces.
+
 ### Flavor
 
 In SBS terms, a flavor is a predefined set of compilation settings to apply when building a module. SBS supports 3 flavors, one for debug, one for release, and an empty flavor. Debug and release flavors modify some compilation flags accordingly. (See `MODULE_FLAV` setting).
