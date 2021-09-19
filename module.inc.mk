@@ -74,11 +74,11 @@ ifneq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE)),) # Exe
 LD := $(MODULE_LD)
 ifeq ($(LD),)
 SOURCE_SUFFIXES := $(suffix $(MODULE_SRCS))
-CXX_SUFFIXES_DOT := $(addsuffix .,$(MODULE_CXX_SUFFIXES))
+CXX_SUFFIXES_DOT := $(addprefix .,$(MODULE_CXX_SUFFIXES))
 ifeq ($(filter $(SOURCE_SUFFIXES),$(CXX_SUFFIXES_DOT)),)
-LD := $(CCPP)
-else
 LD := $(CC)
+else
+LD := $(CCPP)
 endif
 endif
 
