@@ -198,11 +198,11 @@ endif
 # The empty target is added as an ordered dependency so the binary rule
 # will always require *something* to do. This way we can suppress the 'up to date'
 # messages without silencing the entire build output.
-$(ARTIFACT): $(OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
+$(ARTIFACT): $(OBJS) $(MODULE_EXTERN_OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
 ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
 	$(if $(Q),@$(ECHO) -e "$(LD_TOOL_STR)\t$(notdir $@)")
-	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(LIBS_FLAGS)
+	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(MODULE_EXTERN_OBJS) $(LIBS_FLAGS)
 endif
 
 # $1 - source suffix

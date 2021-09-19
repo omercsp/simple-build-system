@@ -137,6 +137,12 @@
 # developer wants to add, she can do it through this setting.
 #MODULE_BIN_DEPS :=
 
+# Space separated list objects files created outside of this module's scope and responsibility.
+# These module's artifact is linked against these objects, but doesn't build them or clean them.
+# Objects in this list adds dependencies to the module's artifact, so if any of these is updated the
+# artifact is linked again
+#MODULE_EXTERN_OBJS :=
+
 # Sets the source file suffixes that will be uses as C source files.
 #MODULE_C_SUFFIXES :=
 
