@@ -1,4 +1,4 @@
-MODULE_FLAV := dbg
+MODULE_FLAV ?= dbg
 MODULE_CWARNS := all error
 MODULE_CDEFS := PROJECT_DEF=1
 MODULE_PROJECT_INCLUDE_DIRS := test/binaries/include
