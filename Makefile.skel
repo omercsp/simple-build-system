@@ -6,18 +6,18 @@
 # directory basename is used instead.
 #MODULE_NAME :=
 
-# Sets the final binary artifact type. 4 types are supported:
+# Sets the binary artifact type. 4 types are supported:
 # 1. 'exec' for executable
 # 2. 'shared' for shared objects library (a '.so' files)
 # 3. 'static' for static library (a '.a' file)
 # 4. 'none' for no artifact creation. This will only compile objects if such are defined, but no
 #    binary artifact is linked.
-# If no type is defined, SBS defaults to 'exec'
+# If no type is defined, SBS defaults to 'exec'.
 # If MODULE_BIN_TYPE is set to anything but the 4 allowed values, SBS issues an error and quit.
 #MODULE_BIN_TYPE :=
 
 # Space separated list of source files to compile and link to create the module's artifact.
-# Each entry in the list represnts a source file in the module's directory. Source files files are
+# Each entry in the list represents a source file in the module's directory. Source files files are
 # expected to be with a valid suffix. See the MODULE_C_SUFFIXES and MODULE_CXX_SUFFIXES settings
 # to suffixes settings.
 #MODULE_SRCS :=
@@ -48,7 +48,7 @@
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_INCLUDE_DIRS :=
 
-# Same as MODULE_INCLUDE_DIRS, only that directories listed in this setting are relative to th
+# Same as MODULE_INCLUDE_DIRS, only that directories listed in this setting are relative to the
 # project root directory. Each <DIR> token in the list is translated to -I<PROJECT_ROOT>/<DIR> in
 # the module's objects compilation flags. So assuming the project root is at '/home/user/project',
 # a value of 'include subproject/include' will generate a '-I/home/user/project/include
@@ -66,13 +66,8 @@
 # extensively, you are probably either misusing SBS or should look for a better suited build system.
 #MODULE_CFLAGS_OVERRIDE :=
 
-# Linking flags to be added to the each object build. When a dedicated setting is available,
-# like MODULE_INCLUDE_DIRS for adding include directories, it is usually recommended to prefer it
-# over adding it here, as it clarifies the Makefile structure and make it easier read and maintain.
-# However it is possible to place all compilation flags in this setting.
-
 # Linking flags to be added to the module's linker command flags. When a dedicated setting is
-# available, like MODULE_PROJECT_LIB_DIRS for adding libraries serach path directories, it is
+# available, like MODULE_PROJECT_LIB_DIRS for adding libraries search path directories, it is
 # usually recommended to prefer it over adding it here, as it clarifies the Makefile structure and
 # make it easier read and maintain. However it is possible to place all link flags in this setting.
 # Overridden by MODULE_LDFAGS_OVERRIDE
