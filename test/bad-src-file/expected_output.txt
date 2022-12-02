@@ -1,0 +1,4 @@
+Cleaning 'bad-src-file'
+Building 'bad-src-file'
+CC	main.c
+Build failed, (expected)
