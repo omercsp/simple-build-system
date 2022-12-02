@@ -140,7 +140,7 @@ LDFLAGS += -pthread
 endif
 endif
 
-SRCS := $(realpath $(MODULE_SRCS))
+SRCS := $(abspath $(MODULE_SRCS))
 SRCS := $(subst $(MODULE_PATH)/,,$(SRCS))
 
 MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
