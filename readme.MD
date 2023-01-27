@@ -1,7 +1,7 @@
 [![Sanity](https://github.com/omercsp/simple-build-system/actions/workflows/sanity.yml/badge.svg?branch=master)](https://github.com/omercsp/simple-build-system/actions/workflows/sanity.yml)
 
 # Simple Build System
-SBS is a light weight build system for C/C++ projects using gnu-make and the either gnu compilers (gcc/g++) or LLVM compilers (clang/clang++). It is intended for users who want an easy to install and configure build system without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to the build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
+SBS is a light weight build system for C/C++ projects using gnu-make and either gnu compilers (gcc/g++) or LLVM compilers (clang/clang++). It is intended for users who want an easy to install and configure build system without the need to write complex makefiles, doesn't require additional dependencies and doesn't add any steps to the build process. SBS strives for simplicity and ease of use, making most of the build settings a matter of simple configuration, sparing the coder the need to write Makefile rules and for the most part, even understand how Makefiles work.
 
 Partial list of SBS features:
 - Simple compilation and linking settings
@@ -47,7 +47,7 @@ MODULE_SRCS := main.c
 
 include module.inc.mk
 ```
-And that's it. We're done with setting up the build, and ready to build the project, and run the created executable (we could have gotten away without the 1st line, but it's probably more clear this way).
+And that's it. We're done with setting up the build, and ready to build the project, and run the created executable (we could have gotten away without the 1st line, but it's probably clearer this way).
 
 First, lets build the project by running make. It there are no compilation errors, the output should look something like this:
 ```bash
@@ -74,7 +74,7 @@ project $ tree
 2 directories, 6 files
 ```
 
-A new directory named `obj` was created in the folder. All binary outputs are placed in that folder. A `my_prog` executable binary resides at `obj/dbg/my_prog`. The additional `dbg` folder indicates the build was done with debug flavor. This is the default SBS behavior, and can be changed. The `*.d` files in the build output are dependency files, which forces source files compilations in case a header dependency has changes. Don't worry if you are unfamiliar with dependency files.
+A new directory named `obj` was created in the folder. All binary outputs are placed in that folder, including `my_prog`, the build executable. The additional `dbg` folder indicates the build used debug flavor. This is the default SBS behavior, and can be changed. The `*.d` files in the build output are dependency files, to force source files compilations in case a header dependency has changed. Don't worry if you are unfamiliar with dependency files.
 
 To run your program, invoke `obj/dbg/my_prog` from the project directory:
 
@@ -90,7 +90,7 @@ Browse the SBS repository for more advanced examples.
 ## Configuration basics
 SBS configuration is done in the Makefiles themselves. For a basic to intermediate use of SBS, no Makefile rules are needed and almost all SBS settings are defined using a gmake `<SETTING> := <VALUE>` syntax, so it is better to think of SBS Makefiles as configuration files rather than traditional Makefiles.
 
-There are quite a few settings, allowing the user to control many aspects of the build. Guidelines and the more common tasks and settings are covered below. **For a full list of possible settings and their documentation, see the `Makefile.skel` file**.
+There are quite a few settings, allowing the user to control many aspects of the build. Guidelines and the more common tasks and settings are covered below. **For a full list of possible settings and their documentation, see the [Makefile.skel](Makefile.skel) file**.
 
 Each SBS Makefile must source (via `include` directive) the `module.inc.mk` file. Its location is up to the user to decide. A reasonable place to put it is in the project root directory.
 
