@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 SCRIPT_PATH=$(readlink -f ${BASH_SOURCE[0]})
 SBS_TEST_DIR=$(dirname ${SCRIPT_PATH})/test
 
