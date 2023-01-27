@@ -1,9 +1,10 @@
 # Defines the basis of the binary name to be built, as well as the name used while SBS prints to
 # screen what is being built.
-# If the binary type is 'shared', the final artifact name will be 'lib<MODULE_NAME>.so'.
-# If the binary type is 'static', the final artifact name will be 'lib<MODULE_NAME>.a'.
-# See MODULE_TYPE for more details about binary types.  If no module name is given, the Makefile's
-# directory basename is used instead.
+# If the binary type is 'binary', the module artifact name will be 'MODULE_NAME'.
+# If the binary type is 'shared', the module artifact name will be 'lib<MODULE_NAME>.so'.
+# If the binary type is 'static', the module artifact name will be 'lib<MODULE_NAME>.a'.
+# See MODULE_BIN_TYPE for more details about binary types.  If no module name is given, the
+# Makefile's directory basename is used instead.
 #MODULE_NAME :=
 
 # Sets the binary artifact type. 4 types are supported:
@@ -16,43 +17,43 @@
 # If MODULE_BIN_TYPE is set to anything but the 4 allowed values, SBS issues an error and quit.
 #MODULE_BIN_TYPE :=
 
-# Space separated list of source files to compile and link to create the module's artifact.
-# Each entry in the list represents a source file in the module's directory. Source files files are
-# expected to be with a valid suffix. See the MODULE_C_SUFFIXES and MODULE_CXX_SUFFIXES settings
-# to suffixes settings.
+# Space separated list of source files to compile and link to create the module's artifact. Each
+# entry in the list represents a source file in the module's directory. Source files files are
+# expected to have a valid suffix.
+# See the MODULE_C_SUFFIXES and MODULE_CXX_SUFFIXES suffixes settings.
 #MODULE_SRCS :=
 
-# Compilation flags to be added to the each object build. When a dedicated setting is available,
-# like MODULE_INCLUDE_DIRS for adding include directories, it is usually recommended to prefer it
-# over adding it here, as it clarifies the Makefile structure and make it easier read and maintain.
-# However it is possible to place all compilation flags in this setting.
+# Flags to be added to source file compilation. When a dedicated setting is available, like
+# MODULE_INCLUDE_DIRS, it is usually recommended to prefer it over adding it here, as it clarifies
+# the Makefile structure and make it easier read and maintain. However It is possible to place all
+# compilation flags in this setting though.
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_CFLAGS :=
 
-# Space separated list of pre-processor definitions. Each <DEFINITION> token in the list is
-# translated to -D<DEFINITION> in the module's objects compilation flags. So a value of 'DEF1
-# DEF2=xxx' will generate a '-DDEF1 -DDEF2=xxx' string in the compilation flags.
+# Space separated list of pre-processor definitions. Each <DEFINITION> token yields a -D<DEFINITION>
+# flag in the module's compilation command. So a value of 'DEF1 DEF2=xxx' adds '-DDEF1 -DDEF2=xxx'
+# to the compilation flags.
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_CDEFS :=
 
-# Space separated list of compiler warnings. Each <WARN> token in the list is translated to -W<WARN>
-# in the module's objects compilation flags. So a value of 'pedantic no-variadic-macros' will
-# generate a '-Wpedantic -Wno-variadic-macros' string in the compilation flags.  Overridden by
-# MODULE_CFLAGS_OVERRIDE.
+# Space separated list of compiler warnings settings. Each <WARN> token yields a -W<WARN> flag in the
+# module's compilation command. So a value of 'pedantic no-variadic-macros' adds '-Wpedantic
+# -Wno-variadic-macros' to the objects compilation command.
+# Overridden by MODULE_CFLAGS_OVERRIDE.
 #MODULE_CWARNS :=
 
 # Space separated list of directories to be searched for header files during preprocessing. Each
-# <DIR> token in the list is translated to -I<DIR> in the module's objects compilation flags. So
-# a value of '/opt/package_1/include /home/user/package_1/include' will generate a
-# '-I/opt/package_1/include -I/home/user/package_2/include' string in the compilation flags.
+# <DIR> token yields a '-I<DIR>' flag in the module's compilation command. So a value of
+# '/opt/package_1/include /home/user/package_1/include' adds '-I/opt/package_1/include
+# -I/home/user/package_2/include' to the objects compilation command.
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_INCLUDE_DIRS :=
 
 # Same as MODULE_INCLUDE_DIRS, only that directories listed in this setting are relative to the
-# project root directory. Each <DIR> token in the list is translated to -I<PROJECT_ROOT>/<DIR> in
-# the module's objects compilation flags. So assuming the project root is at '/home/user/project',
-# a value of 'include subproject/include' will generate a '-I/home/user/project/include
-# -I/home/user/project/subproject/include' string in the compilation flags.
+# project root directory. Each <DIR> yields a '-I<PROJECT_ROOT>/<DIR>' flag in the module's
+# compilation command. Assuming the project root is at '/home/user/project', a value of 'include
+# subproject/include' adds '-I/home/user/project/include -I/home/user/project/subproject/include'
+# to the objects compilation command.
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_PROJECT_INCLUDE_DIRS :=
 
@@ -62,11 +63,11 @@
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_NO_DEP_FLAGS :=
 
-# Completely overrides other compilation flags. If you find yourself using this setting
-# extensively, you are probably either misusing SBS or should look for a better suited build system.
+# Overrides all compilation flags. If you find yourself using this setting extensively, you are
+# probably either misusing SBS or should look for a better suited build system.
 #MODULE_CFLAGS_OVERRIDE :=
 
-# Linking flags to be added to the module's linker command flags. When a dedicated setting is
+# Linking flags to be added to the module's linker command. When a dedicated setting is
 # available, like MODULE_PROJECT_LIB_DIRS for adding libraries search path directories, it is
 # usually recommended to prefer it over adding it here, as it clarifies the Makefile structure and
 # make it easier read and maintain. However it is possible to place all link flags in this setting.
@@ -74,28 +75,28 @@
 #MODULE_LDFLAGS :=
 
 # Space separated list of directories to be searched for libraries during linking. Each <DIR> token
-# in the list is translated to -L<DIR> in the module's linking command flags. So a value of
-# '/opt/package_1/lib /home/user/package_2/lib' will generate a '-L/opt/package_1/lib
-# -L/home/user/package_2/lib' string in the linking command flags.
+# yields a '-L<DIR>' in the module's linking command flags. So a value of '/opt/package_1/lib
+# /home/user/package_2/lib' adds '-L/opt/package_1/lib -L/home/user/package_2/lib' to the linking
+# command.
 # Overridden by MODULE_LDFLAGS_OVERRIDE
 #MODULE_LIB_DIRS :=
 
-# Same as MODULE_LIB_DIRS, only that directories listed in this setting are relative to the
-# project root directory. Each <DIR> token in the list is translated to -L<PROJECT_ROOT>/<DIR> in
-# the module's linking command flags. So assuming the project root is at '/home/user/project'
-# setting this setting value to 'lib subproject/lib' will generate a '-L/home/user/project/lib
-# -L/home/user/project/subproject/lib' string in the linking command flags.
+# Same as MODULE_LIB_DIRS, only that directories are relative to the project root directory. Each
+# <DIR> token in the list is translated to -L<PROJECT_ROOT>/<DIR> in the module's linking command
+# flags. So assuming the project root is at '/home/user/project' setting this setting value to 'lib
+# subproject/lib' will generate a '-L/home/user/project/lib -L/home/user/project/subproject/lib'
+# string in the linking command.
 # Overridden by MODULE_LDFLAGS_OVERRIDE
 #MODULE_PROJECT_LIB_DIRS :=
 
-# List of libraries to be link against the module's artifact. Each <LIB> token in the list is
-# translated to -l<LIB> in the module's linking command flags. For example setting this setting
-# value to  'm mylib' translates to '-lm -lmylib' string in the linking command flags.
+# List of libraries to be link against the module's artifact. Each <LIB> token yields a '-l<LIB>'
+# flags in the module's linking command flags. For example setting this setting value to  'm mylib'
+# translates to '-lm -lmylib' string in the linking command flags.
 # NOTE: this setting *ISN'T* overridden by MODULE_LDFLAGS_OVERRIDE, as libraries placement and order
 # has significance.
 #MODULE_LIBS :=
 
-# Sets the module's build type (flavor). Three flavors are allowed:
+# Sets the module's build type (flavor). SBS supports 3 internal flavors:
 # 1. dbg - Sets "-g -O0 DEBUG=1 __DEBUG__=1" compilation flags.
 # 2. rel - Sets "-O3" compilation flag.
 # 3. none - Doesn't modify compilation flags
@@ -105,21 +106,21 @@
 # Overridden by MODULE_CFLAGS_OVERRIDE
 #MODULE_FLAV :=
 
-# Set this to 1 to add '-pthread' for both compilation flags and linking flags, so pthreads is
+# Set this to 1 to add '-pthread' for both compilation flags and linking flags, so pthreads are
 # enabled in the build.
 # Overridden by MODULE_CFLAGS_OVERRIDE (for compilation)
 # Overridden by MODULE_LDFLAGS_OVERRIDE (for link)
 #MODULE_USE_PTHREAD :=
 
-# Sets the module's final artifact output directory. By default this setting is empty and the link
-# target is created in the same directory as the object files. This setting has no meaning if
-# MODULE_BIN_TYPE was set to 'none'.
+# Sets the module's final artifact output directory. Unless set, link targets are created in the
+# same directory as their object files. This setting has no meaning if MODULE_BIN_TYPE was set to
+# 'none'.
 #MODULE_ARTIFACT_DIR :=
 
 # Set to 1 if the MODULE_ARTIFACT_DIR should be treated as relative to the project's root directory.
-# So for example, if set MODULE_ARTIFACT_DIR is set to '/bin' and MODULE_ARTIFACT_DIR_REL isn't set
-# (or set to 0), the module will try to link the target to '/bin'. Set to 1, the link target
-# directory will be a <PROJECT_ROOT>/bin.
+# If set MODULE_ARTIFACT_DIR is set to '/bin' and MODULE_ARTIFACT_DIR_REL is set to 0, the module
+# will try to link the target to '/bin'. Set to 1, the link target directory will be a
+# <PROJECT_ROOT>/bin. Default value is 0.
 # This setting has no meaning if MODULE_ARTIFACT_DIR is empty.
 #MODULE_ARTIFACT_DIR_REL :=
 
@@ -134,38 +135,35 @@
 
 # Space separated list objects files created outside of this module's scope and responsibility.
 # These module's artifact is linked against these objects, but doesn't build them or clean them.
-# Objects in this list adds dependencies to the module's artifact, so if any of these is updated the
-# artifact is linked again
+# Objects in this list are also added to the module's artifact dependencies.
 #MODULE_EXTERN_OBJS :=
 
-# Sets the source file suffixes that will be uses as C source files.
+# Space separated list of file suffixes that will be treated as C source files.
 #MODULE_C_SUFFIXES :=
 
-# Sets the source file suffixes that will be uses as C++ source files
+# Space separated list of file suffixes that will be treated as C++ source files.
 #MODULE_CXX_SUFFIXES :=
 
-# Sets the linker tool to be used to creating the artifact. If no tool is defined, SBS will set the
-# linker according to the source files list: If a C++ file is found among the list of source files,
-# the C++ linker is used, otherwise the C linker is used.
+# Sets the module's linking tool. If no tool is defined, SBS will set the linker according to the
+# source files list: If a C++ file is found among the list of source files, the C++ linker is used,
+# otherwise the C linker is used.
 #MODULE_LD :=
 
-# Sets the compiler suite to use. Possible values are 'gcc` and `clang`. Will use the appropriate C 
-# and C++ compilers accordingly. Default is 'gcc'.
-# MODULE_CSUITE :=
+# Sets the build suite to use. Possible values are 'gcc` and `clang`. SBS will use the appropriate C
+# and C++ compilers and linkers accordingly. Default is 'gcc'.
+#MODULE_CSUITE :=
 
-# Space separated list of modules (directories) that are to be built when this module is built. For
-# each token <MODULE> in the list a 'make -c <MODULE>' is invoked. If the build is done in parallel
-# (i.e. make -j), sub modules are built in parallel to current module. In order to add dependencies
-# between the some of the sub-modules, a <MODULE0> : <MODULE1> line can be added to the Makefile,
-# making sure <MODULE0> is built before <MODULE1>.
+# Space separated list of modules (directories) to build the current module. For each token <MODULE>
+# in the list, a 'make -C <MODULE>' is invoked. For parallel builds, (i.e. Using 'make -j'), sub
+# modules are built in parallel to current module.
 #MODULE_SUB_MODULES :=
 
 # String separated list of modules (directories) to be built before this module. For each token
-# <MODULE> in the list a 'make -c <MODULE>' is invoked.
+# <MODULE> in the list a 'make -C <MODULE>' is invoked.
 #MODULE_PRE_SUB_MODULES :=
 
 # Space separated list of modules (directories) that are to be built after this module. For each
-# token <MODULE> in the list a 'make -c <MODULE>' is invoked.
+# token <MODULE> in the list a 'make -C <MODULE>' is invoked.
 #MODULE_PRE_POS_MODULES :=
 
 # Space separated list of make targets to run before the module and it's sub module are built. For
