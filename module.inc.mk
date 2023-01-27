@@ -1,6 +1,6 @@
 PROJECT_ROOT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-SHELL := /usr/bin/bash
-ECHO := /usr/bin/echo
+SHELL := /bin/bash
+
 MODULE_PATH := $(shell pwd)
 MAKEFLAGS := --no-print-directory
 
@@ -205,7 +205,7 @@ endif
 $(ARTIFACT): $(OBJS) $(MODULE_EXTERN_OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
 ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
-	$(if $(Q),@$(ECHO) -e "$(LD_TOOL_STR)\t$(notdir $@)")
+	$(if $(Q),@printf "$(LD_TOOL_STR)\t$(notdir $@)\n")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(MODULE_EXTERN_OBJS) $(LIBS_FLAGS)
 else
 .PHONY: $(ARTIFACT)
@@ -219,12 +219,12 @@ endif
 define CreateSourceRules
 $$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@$(ECHO) -e "$2\t$$(subst $$(MODULE_PATH)/,,$$<)")
+	$$(if $$(Q),@printf "$2\t$$(subst $$(MODULE_PATH)/,,$$<)\n")
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 
 $$(MODULE_OBJS_PATH)/%.$1.o: %.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@$(ECHO) -e "$2\t$$<")
+	$$(if $$(Q),@printf "$2\t$$<\n")
 	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
 endef
 

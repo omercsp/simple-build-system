@@ -11,11 +11,8 @@ Partial list of SBS features:
 - Source and build output separation.
 - And more
 
-## Target systems
-This system was built with and for Linux. It is the only platform SBS was verified for. However, it can probably be adapted to any system with gmake and gcc-like compiler.
-
-## Dependencies
-Other than Gnu-make and GCC or Clang suite, no additional packages or tools are required. SBS does assume `bash` is available, in particular SBS tests are to be run.
+## Target systems and dependencies
+For SBS to `gmake`, `bash` and either `gcc` or `clang` are required. In theory, any UNIX-like environment with these dependencies available should be able to run SBS succsefully. However, SBS was built with Linux in mind and it is the platform SBS is actively being developed on. MacOS is verified to run SBS correctly through CI testings, but support for the latter is limited.
 
 ## Installation
 Using SBS requires copying a single file - `module.inc.sh`. From that point it's a matter of configuring the build by writing simple Makefiles.
