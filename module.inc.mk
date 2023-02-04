@@ -111,6 +111,10 @@ ARTIFACT := lib$(MODULE_NAME).a
 LD_TOOL_STR := AR
 endif
 
+ifeq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
+ARTIFACT := $(MODULE_NAME)
+endif
+
 # Handle Release/Debug specific settings
 REL_FLAV := rel
 DBG_FLAV := dbg
@@ -203,6 +207,8 @@ ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
 	@mkdir -p $(ARTIFACT_DIR)
 	$(if $(Q),@$(ECHO) -e "$(LD_TOOL_STR)\t$(notdir $@)")
 	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(MODULE_EXTERN_OBJS) $(LIBS_FLAGS)
+else
+.PHONY: $(ARTIFACT)
 endif
 
 # $1 - source suffix
