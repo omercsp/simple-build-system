@@ -1,3 +1,6 @@
+#ifndef __SBSTEST_BASE_H__
+#define __SBSTEST_BASE_H__
+
 #ifdef __cplusplus
 #include <cstdio>
 #else
@@ -15,3 +18,5 @@ do {						\
 	pr_info("Calling %s\n", #func);		\
 	func(args);				\
 } while(0)
+
+#endif /* __SBSTEST_BASE_H__ */
