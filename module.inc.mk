@@ -85,7 +85,7 @@ endif
 OUTPUT_FLAG := -o
 LD_TOOL_STR := LD
 
-ifeq ($(MODULE_BIN_TYPE), exec)
+ifeq ($(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE))
 ARTIFACT := $(MODULE_NAME)
 else
 LDFLAGS += -shared
@@ -99,7 +99,7 @@ endif # Executable or shared
 # s - Add an index to the archive
 # v - be verbose
 # c - suppress archive creation message
-ifeq ($(MODULE_BIN_TYPE), static)
+ifeq ($(MODULE_BIN_TYPE), $(STATIC_BIN_TYPE))
 LD := ar
 ifeq ($(PROJECT_VERBOSE),1)
 LDFLAGS := rsv
@@ -128,7 +128,7 @@ ifeq ($(filter $(MODULE_FLAV), $(REL_FLAV) $(DBG_FLAV) $(NO_FLAV)),)
 $(error Unkonwn module flavor $(MODULE_FLAV))
 endif
 
-ifneq ($(MODULE_FLAV),none)
+ifneq ($(MODULE_FLAV),$(NO_FLAV))
 ifeq ($(MODULE_FLAV),$(REL_FLAV))
 CFLAGS += -O3
 else
@@ -139,7 +139,7 @@ endif
 
 ifeq ($(MODULE_USE_PTHREAD),1)
 CFLAGS += -pthread
-ifneq ($(MODULE_BIN_TYPE), static)
+ifneq ($(MODULE_BIN_TYPE), $(STATIC_BIN_TYPE))
 LDFLAGS += -pthread
 endif
 endif
@@ -179,7 +179,7 @@ endif
 # uses a static library, it should always come _after_ the module objects, or
 # an undefined reference error is issued. For dynamic libraries it doesn't
 # matter.
-ifneq ($(MODULE_BIN_TYPE),static)
+ifneq ($(MODULE_BIN_TYPE),$(STATIC_BIN_TYPE))
 LIB_DIRS := $(MODULE_LIB_DIRS)
 LIB_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_LIB_DIRS))
 LIBS_FLAGS := $(addprefix -L,$(LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
