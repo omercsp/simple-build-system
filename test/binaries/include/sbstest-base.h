@@ -9,7 +9,8 @@
 #include <libgen.h>
 
 
-#define pr_info(fmt, a...) printf("sbs-test [%s:%d]: " fmt, __func__, __LINE__, ##a)
+#define __pr_info(_fmt, a...) printf("sbs-test [%s:%d]:" _fmt, __func__, __LINE__, ##a)
+#define pr_info(fmt, a...) __pr_info(" " fmt, ##a)
 #define pr_start() pr_info("Starting %s\n", basename(argv[0]))
 #define pr_end() pr_info("Ending %s\n\n", basename(argv[0]))
 

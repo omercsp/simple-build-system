@@ -2,6 +2,6 @@
 
 int prog2_dynlib_func0(void)
 {
-	pr_info("\n");
+	__pr_info("\n");
 	return 0;
 }
