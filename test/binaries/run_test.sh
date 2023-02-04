@@ -28,4 +28,5 @@ export LD_LIBRARY_PATH=${here}/prog2/prog2_dynlib/obj/${flav}
 prog2/obj/${flav}/prog2
 multi-lang/obj/${flav}/multi-lang
 multi-lang2/obj/${flav}/multi-lang2
+prog-with-out-of-tree-src/obj/${flav}/prog-with-out-of-tree-src
 
