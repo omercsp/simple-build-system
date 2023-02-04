@@ -4,5 +4,5 @@
 
 void cppfile_func(void)
 {
-	pr_info("\n");
+	__pr_info("\n");
 }
