@@ -54,16 +54,16 @@ sbs-test [staticlib_additional_func0:6]:
 sbs-test [main:14]: Calling staticlib_additional_func0
 sbs-test [staticlib_additional_func0:6]: 
 sbs-test [main:15]: Calling nobin_func0
-sbs-test [nobin_func0:6]: function=nobin_func0
+sbs-test [nobin_func0:8]: function=nobin_func0
 sbs-test [main:16]: Calling nobin_func1
-sbs-test [nobin_func1:6]: function=nobin_func1
+sbs-test [nobin_func1:8]: function=nobin_func1
 sbs-test [main:17]: Ending prog_nobin
 
 sbs-test [main:7]: Starting prog-nobin-extern
 sbs-test [main:8]: Calling nobin_func0
-sbs-test [nobin_func0:6]: function=nobin_func0
+sbs-test [nobin_func0:8]: function=nobin_func0
 sbs-test [main:9]: Calling nobin_func1
-sbs-test [nobin_func1:6]: function=nobin_func1
+sbs-test [nobin_func1:8]: function=nobin_func1
 sbs-test [main:10]: Ending prog-nobin-extern
 
 sbs-test [main:21]: Starting prog2

@@ -1,3 +1,5 @@
+#include "nobin.h"
+
 #include <sbstest-base.h>
 #include <stdio.h>
 
