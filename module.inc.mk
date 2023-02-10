@@ -278,18 +278,23 @@ ORDER_STR := " order=[$(BUILD_ORDER)]"
 endif
 endif
 
+
+define SbsForEach
+	for t in $(1); do $(2) $$t $(3) || exit $$? ; done
+endef
+
 all:
 	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_BUILD), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
-	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t);)
+	@$(call SbsForEach,$(MODULE_PRE_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
+	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C)
 	@$(MAKE) -f $(BASE_MAKEFILE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
-	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t);)
-	@$(foreach t,$(MODULE_POST_BUILD), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
+	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C)
+	@$(call SbsForEach,$(MODULE_POST_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
 
 clean:
 	@echo "Cleaning '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_CLEAN), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
-	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t) clean;)
+	@$(call SbsForEach,$(MODULE_PRE_CLEAN),$(MAKE) -f $(BASE_MAKEFILE))
+	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C, clean)
 	@$(MAKE) -f $(BASE_MAKEFILE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
-	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t) clean;)
-	@$(foreach t,$(MODULE_POST_CLEAN), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
+	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C, clean)
+	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(BASE_MAKEFILE))
