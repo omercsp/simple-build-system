@@ -1,8 +1,8 @@
 *.o
 *.swp
 obj/
+lib/
 test/*/module.inc.mk
-test/binaries/lib/
 .cache/
 compile_commands.json
 .tasks.json

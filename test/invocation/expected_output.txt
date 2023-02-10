@@ -1,0 +1,10 @@
+SBS invoke style test: Sanity 
+SBS invoke style test: In project, but with -C 
+SBS invoke style test: One directory out 
+SBS invoke style test: Two directories out 
+SBS invoke style test: One directory in 
+SBS invoke style test: Sanity (using -f)
+SBS invoke style test: In project, but with -C (using -f)
+SBS invoke style test: One directory out (using -f)
+SBS invoke style test: Two directories out (using -f)
+SBS invoke style test: One directory in (using -f)

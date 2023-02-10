@@ -1,0 +1,9 @@
+include config.mk
+
+MODULE_PRE_SUB_MODULES := sharedlib
+MODULE_SRCS := main.c
+MODULE_LIBS := invocation_shared
+MODULE_VERBOSE := 0
+
+TOP_LEVEL := $(shell git rev-parse --show-toplevel)
+include $(TOP_LEVEL)/module.inc.mk
