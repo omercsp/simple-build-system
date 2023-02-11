@@ -1,0 +1,194 @@
+Cleaning 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+Cleaning 'ok0'
+Cleaning 'ok1'
+Cleaning 'ok2'
+Cleaning 'ok3'
+Cleaning 'ok4'
+Cleaning 'ok5'
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On postbuild1
+Build failure test
+
+Pre build failure - start
+Building 'failures' order=[bad_step prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On bad_step
+Build failed, (expected)
+2
+
+Pre build failure - middle
+Building 'failures' order=[prebuild0 bad_step prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On bad_step
+Build failed, (expected)
+2
+
+Pre build failure - end
+Building 'failures' order=[prebuild0 prebuild1 bad_step ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+On bad_step
+Build failed, (expected)
+2
+
+Pre sub-modules failure - start
+Building 'failures' order=[prebuild0 prebuild1 bad_submodule ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Pre sub-modules failure - middle
+Building 'failures' order=[prebuild0 prebuild1 ok0 bad_submodule ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Pre sub-modules failure - end
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 bad_submodule failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Bad current module
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Build failed, (expected)
+2
+
+Sub-modules failure - start
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures bad_submodule ok2 ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Sub-modules failure - middle
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 bad_submodule ok3 postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Sub-modules failure - end
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 bad_submodule postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Post sub-modules failure - start
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 bad_submodule ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Post sub-modules failure - middle
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 bad_submodule ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Post sub-modules failure - end
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 ok4 ok5 bad_submodule]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+Building 'bad_submodule' order=[stop]
+Build failed, (expected)
+2
+
+Post build failure - start
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 bad_step postbuild0 postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On bad_step
+Build failed, (expected)
+2
+
+Post build failure - middle
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 bad_step postbuild1 ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On bad_step
+Build failed, (expected)
+2
+
+Post build failure - end
+Building 'failures' order=[prebuild0 prebuild1 ok0 ok1 failures ok2 ok3 postbuild0 postbuild1 bad_step ok4 ok5]
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On postbuild1
+On bad_step
+Build failed, (expected)
+2
+

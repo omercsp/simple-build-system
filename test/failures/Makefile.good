@@ -1,0 +1,25 @@
+MODULE_PRE_BUILD := prebuild0 prebuild1
+MODULE_PRE_SUB_MODULES := ok0 ok1
+MODULE_SUB_MODULES := ok2 ok3
+MODULE_SRCS := main.c
+MODULE_POST_SUB_MODULES := ok4 ok5
+MODULE_POST_BUILD := postbuild0 postbuild1
+
+prebuild0:
+	@echo "On $@"
+
+prebuild1:
+	@echo "On $@"
+
+postbuild0:
+	@echo "On $@"
+
+postbuild1:
+	@echo "On $@"
+
+bad_step:
+	@echo "On $@"
+	@false
+
+TOP_LEVEL=$(shell git rev-parse --show-toplevel)
+include $(TOP_LEVEL)/module.inc.mk
