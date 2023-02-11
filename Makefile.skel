@@ -61,7 +61,7 @@
 # dependency file ('*.d') so header dependencies are handled correctly. To disable this behavior,
 # set this setting to 0. See GCC's documentation for more information about it's dependency flags.
 # Overridden by MODULE_CFLAGS_OVERRIDE
-#MODULE_NO_DEP_FLAGS :=
+#MODULE_DEP_FLAGS :=
 
 # Overrides all compilation flags. If you find yourself using this setting extensively, you are
 # probably either misusing SBS or should look for a better suited build system.

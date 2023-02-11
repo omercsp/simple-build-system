@@ -148,7 +148,7 @@ A module build outputs up to 3 types of files
 By default, all output files reside in `<MODULE_PATH>/obj/<FLAVOR>`, where flavor is determined by `MODULE_FLAV`. The artifact location can be set to any location by setting `MODULE_ARTIFACT_DIR`.
 
 ### Header dependencies
-By default, SBS adds compilation flags for header files dependencies generation (`.d`, files) for better build behavior on headers modification. This behavior can be turned off by setting `MODULE_NO_DEP_FLAGS` value to `1`. For more details about headers dependencies generation, consult the compiler's documentation.
+By default, SBS adds compilation flags for header files dependencies generation (`.d`, files) for better build behavior on headers modification. This behavior can be turned off by setting `MODULE_DEP_FLAGS` value to `0`. For more details about headers dependencies generation, consult the compiler's documentation.
 
 ### Language
 SBS supports C and C++ as valid module languages, and tries to compile each source according to its suffix:
