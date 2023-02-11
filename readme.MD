@@ -186,6 +186,15 @@ A SBS module might serve as a *pseudo* module, without any sources to compile bu
 
  (See `MODULE_SUB_MODULES`, `MODULE_PRE_SUB_MODULES` and `MODULE_PRE_POS_MODULES` settings).
 
+## Invocation and Makefiles naming
+As a general rule, SBS Makefiles should be simply named `Makefile`, where one Makefile exists in every module directory. Like other gnu-based systems, to run SBS the user should do either of the following:
+1. Enter the module's directory and run `make`
+2. Run `make -C <MODULE_DIR>`.
+
+Occasionally, one might want to have explicit Makefile names in a given directory, where build are invoked using `make -f <FILENAME>`. SBS offers some support for this type of build command. A SBS Makefile can be named whatever and executed with a `make -f` command, but there a few notes to consider:
+1. Submodules are always built using a default Makefile.
+2. While true for Makefile in general, it's still worth mentioning that more than one Makefile in the same directory (i.e. `Makefile.A` and `Makefile.B`) are hard to maintain and should be carefully written so they won't overwrite one another output. It is best avoided.
+
 ## FAQ
 ### How to add an include directory?
 With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>` flag. So a setting of

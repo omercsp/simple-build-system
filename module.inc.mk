@@ -3,6 +3,7 @@ SHELL := /usr/bin/bash
 ECHO := /usr/bin/echo
 MODULE_PATH := $(shell pwd)
 MAKEFLAGS := --no-print-directory
+BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
 
 # If no module name is defined use the directory as the name
 ifeq ($(MODULE_NAME),)
@@ -279,16 +280,16 @@ endif
 
 all:
 	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_BUILD), $(MAKE) $(t);)
+	@$(foreach t,$(MODULE_PRE_BUILD), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
 	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t);)
-	@$(MAKE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
+	@$(MAKE) -f $(BASE_MAKEFILE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
 	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t);)
-	@$(foreach t,$(MODULE_POST_BUILD), $(MAKE) $(t);)
+	@$(foreach t,$(MODULE_POST_BUILD), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
 
 clean:
 	@echo "Cleaning '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(foreach t,$(MODULE_PRE_CLEAN), $(MAKE) $(t);)
+	@$(foreach t,$(MODULE_PRE_CLEAN), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
 	@$(foreach t,$(MODULE_PRE_SUB_MODULES), $(MAKE) -C $(t) clean;)
-	@$(MAKE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
+	@$(MAKE) -f $(BASE_MAKEFILE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
 	@$(foreach t,$(MODULE_POST_SUB_MODULES), $(MAKE) -C $(t) clean;)
-	@$(foreach t,$(MODULE_POST_CLEAN), $(MAKE) $(t);)
+	@$(foreach t,$(MODULE_POST_CLEAN), $(MAKE) -f $(BASE_MAKEFILE) $(t);)
