@@ -1,0 +1,7 @@
+#ifndef __HEADER_H_GUARD__
+#define __HEADER_H_GUARD__
+
+#define MY_MACRO "my macro"
+
+#endif // __HEADER_H_GUARD__
+
