@@ -135,8 +135,21 @@ Source files can reside anywhere, as long as they accessible. SBS treats differe
 #### White space in source names and paths
 Due to gnu-Make limitations, SBS doesn't support source file with names or paths that contain white spaces.
 
-### Flavor
-In SBS terms, a flavor is a predefined set of compilation settings to apply when building a module. SBS supports 3 flavors, one for debug, one for release, and an empty flavor. Debug and release flavors modify some compilation flags accordingly. (See `MODULE_FLAV` setting).
+### Build Flavors
+Flavors distinguish between different build options and their corresponding output and artifacts. Flavors are defined by the `MODULE_FLAV` setting. By itself flavor only determine the module output directory. For a `MODULE_FLAV := myflav` setting, SBS will use `obj/myflav`, relative to the module directory, as the output directory. It is up to the user to put meaning into the flavor using different build options, and distinguishing it from other flavors.
+
+The idea of flavors (in other build system other terms, like 'build configuration' are used) isn't unique to SBS and it is beyond the scope of this manual to explain how to manage you flavors, but a possible solution for can be based on different project config files, one for each flavor which all modules Makefiles include and alternating them according to the required flavor at the time (using renames, soft links, etc).
+
+All SBS modules must have a flavor. If no flavor is provides, SBS defaults to the `dbg` flavor (see below).  Flavor names can't contain white spaces.
+
+#### SBS Internal Flavors
+SBS provides two internal flavors for debug and release which slightly modify the compilation flags with popular relevant settings:
+- Debug (`dbg`) -  `-g -O0 --DDEBUG=1 -D__DEBUG__=1`
+- Release (`rel`) -  `-O3`
+
+If you are unfamiliar with these build options, consult the compilers documentation.
+
+To prevent SBS from adding any flags to the build options (e.g. If the `-O3` is too aggressive), set `MODULE_USE_DEF_FLAV` to `0`.
 
 ### Build Output
 A module build outputs up to 3 types of files

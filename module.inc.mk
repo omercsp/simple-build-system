@@ -119,22 +119,30 @@ endif
 # Handle Release/Debug specific settings
 REL_FLAV := rel
 DBG_FLAV := dbg
-NO_FLAV := none
 
 ifeq ($(MODULE_FLAV),)
 MODULE_FLAV := $(DBG_FLAV)
 endif
 
-ifeq ($(filter $(MODULE_FLAV), $(REL_FLAV) $(DBG_FLAV) $(NO_FLAV)),)
-$(error Unkonwn module flavor $(MODULE_FLAV))
+ifneq ($(words $(MODULE_FLAV)), 1)
+$(error Invalid flavor '$(MODULE_FLAV)')
 endif
 
-ifneq ($(MODULE_FLAV),$(NO_FLAV))
+ifeq ($(MODULE_USE_DEF_FLAV),)
+MODULE_USE_DEF_FLAV := 1
+endif
+ifeq ($(filter $(MODULE_USE_DEF_FLAV),1 0),)
+$(error Illegal default flavor options setting '$(MODULE_USE_DEF_FLAV)')
+endif
+
+ifneq ($(filter $(MODULE_FLAV),$(REL_FLAV) $(DBG_FLAV)),)
+ifneq ($(MODULE_USE_DEF_FLAV),0)
 ifeq ($(MODULE_FLAV),$(REL_FLAV))
 CFLAGS += -O3
 else
 CFLAGS += -g -O0
 CDEFS += DEBUG=1 __DEBUG__=1
+endif
 endif
 endif
 

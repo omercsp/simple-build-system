@@ -96,15 +96,20 @@
 # has significance.
 #MODULE_LIBS :=
 
-# Sets the module's build type (flavor). SBS supports 3 internal flavors:
+# Sets the module's build type (flavor). Flavors sets the objects and default artifact output 
+# directory. It is up to the user to put meaning into a given flavor. SBS does provide two
+# internal flavors for use:
 # 1. dbg - Sets "-g -O0 DEBUG=1 __DEBUG__=1" compilation flags.
 # 2. rel - Sets "-O3" compilation flag.
-# 3. none - Doesn't modify compilation flags
-# Default is 'dbg'
-# The flavor setting also influence the objects and default artifact output directory, which is
-# 'obj/<FLAVOR>' related to the module's directory.
-# Overridden by MODULE_CFLAGS_OVERRIDE
+# These flags are overridden by MODULE_CFLAGS_OVERRIDE
+# If no flavor is set, SBS defaults to 'dbg'
+# See also MODULE_USE_DEF_FLAV
 #MODULE_FLAV :=
+
+# Set to 0 to prevent 'dbg' and 'rel' flavor to set any compilation flags. Can be useful if one
+# wants to use these flavor names himself without SBS adding any flags.
+# Default is 1
+#MODULE_USE_DEF_FLAV :=
 
 # Set this to 1 to add '-pthread' for both compilation flags and linking flags, so pthreads are
 # enabled in the build.
