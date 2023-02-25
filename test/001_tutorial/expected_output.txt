@@ -1,5 +1,14 @@
+Testing 'dbg'
 Cleaning 'tutorial'
 Building 'tutorial'
 CC	main.c
 LD	tutorial
 SBS Hello, world!
+
+Testing 'rel'
+Cleaning 'tutorial'
+Building 'tutorial'
+CC	main.c
+LD	tutorial
+SBS Hello, world!
+

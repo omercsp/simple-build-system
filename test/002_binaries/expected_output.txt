@@ -1,3 +1,104 @@
+Testing 'dbg'
+=================
+Cleaning binaries
+-----------------
+Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
+Cleaning 'dynamic' order=[dynamic dynlib_tester]
+Cleaning 'dyn_tester'
+Cleaning 'static'
+Cleaning 'nobin'
+Cleaning 'multi-lang'
+Cleaning 'prog' order=[__pre_build prog __post_build]
+Cleaning 'multi-lang2'
+Cleaning 'prog-with-out-of-tree-src'
+Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'prog2_dynlib'
+Cleaning 'prog_nobin'
+Cleaning 'prog-nobin-extern'
+
+Building binaries
+-----------------
+Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
+Building 'dynamic' order=[dynamic dynlib_tester]
+Building 'dyn_tester'
+Building 'static'
+Building 'nobin'
+Building 'multi-lang'
+Building 'prog' order=[__pre_build prog __post_build]
+Building 'multi-lang2'
+Building 'prog-with-out-of-tree-src'
+Building 'prog2' order=[prog2_dynlib prog2]
+Building 'prog2_dynlib'
+Building 'prog_nobin'
+Building 'prog-nobin-extern'
+
+Checking binaries output
+------------------------
+sbs-test [main:9]: Starting prog
+sbs-test [main:10]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:11]: Calling staticlib_func0
+sbs-test [staticlib_func0:5]:
+sbs-test [main:12]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]:
+sbs-test [main:13]: Ending prog
+
+sbs-test [main:8]: Starting dyn_tester
+sbs-test [main:9]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:10]: Ending dyn_tester
+
+sbs-test [main:10]: Starting prog_nobin
+sbs-test [main:11]: Calling dynlib_func0
+sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+sbs-test [main:12]: Calling staticlib_func0
+sbs-test [staticlib_func0:5]:
+sbs-test [main:13]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]:
+sbs-test [main:14]: Calling staticlib_additional_func0
+sbs-test [staticlib_additional_func0:6]:
+sbs-test [main:15]: Calling nobin_func0
+sbs-test [nobin_func0:8]: function=nobin_func0
+sbs-test [main:16]: Calling nobin_func1
+sbs-test [nobin_func1:8]: function=nobin_func1
+sbs-test [main:17]: Ending prog_nobin
+
+sbs-test [main:7]: Starting prog-nobin-extern
+sbs-test [main:8]: Calling nobin_func0
+sbs-test [nobin_func0:8]: function=nobin_func0
+sbs-test [main:9]: Calling nobin_func1
+sbs-test [nobin_func1:8]: function=nobin_func1
+sbs-test [main:10]: Ending prog-nobin-extern
+
+sbs-test [main:21]: Starting prog2
+sbs-test [main:22]: log(16)=2
+sbs-test [main:23]: Calling prog2_dynlib_func0
+sbs-test [prog2_dynlib_func0:5]:
+sbs-test [main:24]: Ending prog2
+
+sbs-test [main:8]: Starting multi-lang
+sbs-test [main:9]: Calling cfile_func
+sbs-test [cfile_func:7]: Calling cppfile_func
+sbs-test [cppfile_func:7]:
+sbs-test [main:10]: Ending multi-lang
+
+sbs-test [main:8]: Starting multi-lang2
+sbs-test [main:9]: Calling cfile_func0
+sbs-test [cfile_func0:7]: Calling cppfile_func0
+sbs-test [cppfile_func0:8]: Calling cfile_func1
+sbs-test [cfile_func1:12]: Calling cppfile_func1
+sbs-test [cppfile_func1:16]: Final call
+sbs-test [main:10]: Ending multi-lang2
+
+sbs-test [main:13]: Starting prog-with-out-of-tree-src
+sbs-test [main:14]: Calling out_of_tree_func
+sbs-test [out_of_tree_func:5]: Out of tree func
+sbs-test [main:15]: Calling internal_func
+sbs-test [internal_func:7]:
+sbs-test [main:16]: Ending prog-with-out-of-tree-src
+
+Testing 'rel'
+=================
 Cleaning binaries
 -----------------
 Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
