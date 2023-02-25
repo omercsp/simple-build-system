@@ -21,7 +21,7 @@ for flav in dbg rel; do
 			ret=$?
 		fi
 		if [[ ${ret} -ne 0 ]]; then
-			echo "error running test at '${d}'"
+			echo "error running test at '${dir}'"
 			echo "----------------------------"
 			cat ${outfile}
 			echo "----------------------------"
