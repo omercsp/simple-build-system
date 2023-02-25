@@ -20,10 +20,10 @@ ALL_TARGET := $(EMPTY_TARGET)
 ######################### Binary build start #########################
 ifneq ($(MODULE_SRCS),)
 
-CFLAGS := $(MODULE_CFLAGS) $(SBS_CFLAGS)
-CDEFS := $(MODULE_CDEFS) $(SBS_CDEFS)
-CWARNS := $(MODULE_CWARNS) $(SBS_CWARNS)
-LDFLAGS := $(MODULE_LDFLAGS) $(SBS_LDFLAGS)
+CFLAGS := $(MODULE_CFLAGS)
+CDEFS := $(MODULE_CDEFS)
+CWARNS := $(MODULE_CWARNS)
+LDFLAGS := $(MODULE_LDFLAGS)
 
 ifneq ($(MODULE_DEP_FLAGS),0)
 CFLAGS += -MMD -MP
@@ -196,7 +196,7 @@ CFLAGS := $(strip $(CFLAGS))
 LDFLAGS := $(strip $(LDFLAGS))
 LIBS_FLAGS := $(strip $(LIBS_FLAGS))
 
-ifneq ($(filter 1,$(MODULE_VERBOSE) $(SBS_VERBOSE)),1)
+ifneq ($(filter 1,$(MODULE_VERBOSE)),1)
 Q := @
 endif
 
