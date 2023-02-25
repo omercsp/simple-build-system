@@ -15,7 +15,7 @@ EMPTY_TARGET := __empty_target
 $(EMPTY_TARGET):
 	@true
 CLEAN_TARGET :=$(EMPTY_TARGET)
-ALL_TARGET := $(EMPTY_TARGET)
+MAIN_TARGET := $(EMPTY_TARGET)
 
 ######################### Binary build start #########################
 ifneq ($(MODULE_SRCS),)
@@ -244,7 +244,7 @@ endif
 $(ARTIFACT)_clean:
 	$(Q)rm -f $(CLEAN_FILES)
 
-ALL_TARGET := $(ARTIFACT)
+MAIN_TARGET := $(ARTIFACT)
 CLEAN_TARGET := $(ARTIFACT)_clean
 
 endif # None empty target
@@ -287,7 +287,7 @@ all:
 	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
 	@$(call SbsForEach,$(MODULE_PRE_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
 	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C)
-	@$(MAKE) -f $(BASE_MAKEFILE) $(ALL_TARGET) $(MODULE_SUB_MODULES)
+	@$(MAKE) -f $(BASE_MAKEFILE) $(MAIN_TARGET) $(MODULE_SUB_MODULES)
 	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C)
 	@$(call SbsForEach,$(MODULE_POST_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
 
