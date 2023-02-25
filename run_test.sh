@@ -5,7 +5,7 @@ SBS_TEST_DIR=$(dirname ${SCRIPT_PATH})/test
 if [[ -n $* ]]; then
 	test_dirs=($*)
 else
-	test_dirs=$(find ${SBS_TEST_DIR} -maxdepth 1 -type d -not -path ${SBS_TEST_DIR})
+	test_dirs=$(find ${SBS_TEST_DIR} -maxdepth 1 -type d -not -path ${SBS_TEST_DIR} | sort)
 fi
 
 for flav in dbg rel; do

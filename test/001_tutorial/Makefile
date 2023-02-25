@@ -1,3 +1,4 @@
+MODULE_NAME := tutorial
 TOP_LEVEL=$(shell git rev-parse --show-toplevel)
 MODULE_SRCS := main.c
 

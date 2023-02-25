@@ -1,3 +1,4 @@
+MODULE_NAME := failures
 MODULE_PRE_BUILD := prebuild0 prebuild1
 MODULE_PRE_SUB_MODULES := ok0 ok1
 MODULE_SUB_MODULES := ok2 ok3

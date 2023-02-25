@@ -33,7 +33,7 @@ _run_failed_test()
 
 make -f Makefile.good clean
 make -f Makefile.good | sed -e '/^CC/d' -e '/^LD/d'
-obj/dbg/$(basename ${here})
+obj/dbg/failures
 
 echo
 # Pre build
