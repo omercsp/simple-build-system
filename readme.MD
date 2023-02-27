@@ -130,7 +130,7 @@ A module type defines the artifact type build will produce. SBS module supports 
 ### Source files
 Source files for a module are defined with the `MODULE_SRCS` settings. It's a space separated list of files to be compiled. All source files must have a valid C or C++ suffix (e.g. `c`, `C`, `cpp`, `cxx`, etc.). See the [language](#language) section for more details about source files suffixes.
 
-Source files can reside anywhere, as long as they accessible. SBS treats diffrently source files inside or outside the module's directory. Both types of files correspondig object files will reside inside the module's `obj` direcotry, so a source file can be compiled multiple times in different modules, possibly with different compilation flags, and differet objects will be created for them on each module.
+Source files can reside anywhere, as long as they accessible. SBS treats differently source files inside or outside the module's directory. Both types of files corresponding object files will reside inside the module's `obj` directory, so a source file can be compiled multiple times in different modules, possibly with different compilation flags, and different objects will be created for them on each module.
 
 #### White space in source names and paths
 Due to gnu-Make limitations, SBS doesn't support source file with names or paths that contain white spaces.
@@ -203,7 +203,7 @@ With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>`
 MODULE_INCLUDE_DIRS := some_dir/include other_dir/include
 ```
 
-will yield a `-Isome_dir/include -Iother_dir/include` in the module's objects compile command.
+yields a `-Isome_dir/include -Iother_dir/include` in the module's objects compile command.
 
 ### How to add a preprocessor definition?
 With `MODULE_CDEFS`. Each entry`<DEF>` in the list yields a `-D<DEF>` flag. So a setting of
@@ -212,7 +212,7 @@ With `MODULE_CDEFS`. Each entry`<DEF>` in the list yields a `-D<DEF>` flag. So a
 MODULE_CDEFS := _GNU_SOURCE USE_LOG=0
 ```
 
-will yield a `-D_GNU_SOURCE -DUSE_LOG=0` in the module's objects compile command.
+yields a `-D_GNU_SOURCE -DUSE_LOG=0` in the module's objects compile command.
 
 ### How to add a compiler warning setting?
 With `MODULE_CWARNS`. Each entry `<WARN>` in the list yields a `-W<WARN>`  flag. So a setting of
@@ -221,10 +221,7 @@ With `MODULE_CWARNS`. Each entry `<WARN>` in the list yields a `-W<WARN>`  flag.
 MODULE_CWARNS := no-import format
 ```
 
-will yield a `-Wno-import -Wformat` in the module's object compile command. See the compiler's documentation for possible warning settings.
-
-
-will yield a `-D_GNU_SORUCE -DUSE_LOG=0` in the module's object compile command.
+yields a `-Wno-import -Wformat` in the module's object compile command. See the compiler's documentation for possible warning settings.
 
 ### How to add a library to search when linking?
 With `MODULE_LIB_DIRS`.  Each directory `<DIR>` in the list yields `-L<DIR>` linker flag. So a setting of
@@ -233,7 +230,7 @@ With `MODULE_LIB_DIRS`.  Each directory `<DIR>` in the list yields `-L<DIR>` lin
 MODULE_LIB_DIRS := /opt/external_project0 /opt/external_project1
 ```
 
-will yield a `-L/opt/external_project0 -L/opt/external_project1` flags in the link command.
+yields a `-L/opt/external_project0 -L/opt/external_project1` flags in the link command.
 
 ### How to add a directory to the libraries search path?
 Libraries to link with the module's artifact can be added using `MODULE_LIBS`. Each library `<LIB>` in the list yields a `-l<LIB>` linker flag. So a setting of
@@ -242,7 +239,7 @@ Libraries to link with the module's artifact can be added using `MODULE_LIBS`. E
 MODULE_LIBS := m uuid
 ```
 
-will yield a `-lm -luuid` flags in the link command.
+yields a `-lm -luuid` flags in the link command.
 
 ### How to create a static or dynamic library?
 A module artifact type is defined by its `MODULE_BIN_TYPE` setting. Setting it to `static` or `shared` will create static or dynamic libraries respectively. The module's artifact name will be `lib<MODULE_NAME>.a` for static libraries and `lib<MODULE_NAME>.so` for dynamic libraries.
