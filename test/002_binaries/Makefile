@@ -6,6 +6,7 @@ MODULE_POST_SUB_MODULES := prog2 prog-nobin prog-nobin-extern
 staticlib: dynlib
 multi-lang2: prog
 prog-with-out-of-tree-src: multi-lang2
+multi-lang2__clean: prog__clean
 prog-with-out-of-tree-src__clean: multi-lang2__clean
 
 include ../../module.inc.mk
