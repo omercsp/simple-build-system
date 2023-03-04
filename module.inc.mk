@@ -102,10 +102,10 @@ endif # Executable or shared
 # c - suppress archive creation message
 ifeq ($(MODULE_BIN_TYPE), $(STATIC_BIN_TYPE))
 LD := ar
-ifeq ($(PROJECT_VERBOSE),1)
-LDFLAGS := rsv
+ifeq ($(MODULE_VERBOSE),1)
+LDFLAGS := -rscv
 else
-LDFLAGS := rsc
+LDFLAGS := -rsc
 endif
 
 ARTIFACT := lib$(MODULE_NAME).a
