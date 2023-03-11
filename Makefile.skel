@@ -96,7 +96,7 @@
 # has significance.
 #MODULE_LIBS :=
 
-# Sets the module's build type (flavor). Flavors sets the objects and default artifact output 
+# Sets the module's build type (flavor). Flavors sets the objects and default artifact output
 # directory. It is up to the user to put meaning into a given flavor. SBS does provide two
 # internal flavors for use:
 # 1. dbg - Sets "-g -O0 DEBUG=1 __DEBUG__=1" compilation flags.
