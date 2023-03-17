@@ -1,97 +1,102 @@
-PROJECT_ROOT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+SBS_PROJ_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 SHELL := /usr/bin/bash
 ECHO := /usr/bin/echo
-MODULE_PATH := $(shell pwd)
 MAKEFLAGS := --no-print-directory
-BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
+SBS_MODULE_PATH := $(shell pwd)
+SBS_BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
 
 # If no module name is defined use the directory as the name
-ifeq ($(MODULE_NAME),)
-MODULE_NAME := $(notdir $(MODULE_PATH))
+SBS_MODULE_NAME := $(MODULE_NAME)
+ifeq ($(SBS_MODULE_NAME),)
+SBS_MODULE_NAME := $(notdir $(SBS_MODULE_PATH))
 endif
 
 # Start with empty targets, lets see what the module's Makefile has for us
-EMPTY_TARGET := __empty_target
-$(EMPTY_TARGET):
+SBS_EMPTY_TARGET := sbs_empty_target
+$(SBS_EMPTY_TARGET):
 	@true
-CLEAN_TARGET :=$(EMPTY_TARGET)
-MAIN_TARGET := $(EMPTY_TARGET)
+SBS_CLEAN_TARGET := $(SBS_EMPTY_TARGET)
+SBS_MAIN_TARGET := $(SBS_EMPTY_TARGET)
 
 ######################### Binary build start #########################
 ifneq ($(MODULE_SRCS),)
 
-CFLAGS := $(MODULE_CFLAGS)
-CDEFS := $(MODULE_CDEFS)
-CWARNS := $(MODULE_CWARNS)
-LDFLAGS := $(MODULE_LDFLAGS)
+SBS_CFLAGS := $(MODULE_CFLAGS)
+SBS_CDEFS := $(MODULE_CDEFS)
+SBS_CWARNS := $(MODULE_CWARNS)
+SBS_LDFLAGS := $(MODULE_LDFLAGS)
 
 ifneq ($(MODULE_DEP_FLAGS),0)
-CFLAGS += -MMD -MP
+SBS_CFLAGS += -MMD -MP
 endif
 
 # Handle language
-ifndef MODULE_C_SUFFIXES
-MODULE_C_SUFFIXES := c C
+SBS_C_SUFFIXES := $(MODULE_C_SUFFIXES)
+ifndef SBS_C_SUFFIXES
+SBS_C_SUFFIXES := c C
 endif
 
-ifndef MODULE_CXX_SUFFIXES
-MODULE_CXX_SUFFIXES := cpp cxx cc CC CXX CPP
+SBS_CXX_SUFFIXES := $(MODULE_CXX_SUFFIXES)
+ifndef SBS_CXX_SUFFIXES
+SBS_CXX_SUFFIXES := cpp cxx cc CC CXX CPP
 endif
 
-GCC_SUITE := gcc
-CLANG_SUITE := clang
+SBS_GCC_SUITE := gcc
+SBS_CLANG_SUITE := clang
 
-ifneq ($(MODULE_CSUITE),)
-ifeq ($(filter $(MODULE_CSUITE),$(GCC_SUITE) $(CLANG_SUITE)),)
-$(error Unkonwn compiler suite $(MODULE_CSUITE))
+SBS_CSUITE := $(MODULE_CSUITE)
+ifneq ($(SBS_CSUITE),)
+ifeq ($(filter $(SBS_CSUITE),$(SBS_GCC_SUITE) $(SBS_CLANG_SUITE)),)
+$(error Unkonwn compiler suite $(SBS_CSUITE))
 endif
 else
-MODULE_CSUITE := $(GCC_SUITE)
+SBS_CSUITE := $(SBS_GCC_SUITE)
 endif
 
-ifeq ($(MODULE_CSUITE),$(GCC_SUITE))
-CC := gcc
-CCPP := g++
+ifeq ($(SBS_CSUITE),$(SBS_GCC_SUITE))
+SBS_CC := gcc
+SBS_CCPP := g++
 else
-CC := clang
-CCPP := clang++
+SBS_CC := clang
+SBS_CCPP := clang++
 endif
 
 # Handle binary type
-EXEC_BIN_TYPE := exec
-SHARED_BIN_TYPE := shared
-STATIC_BIN_TYPE := static
-NONE_BIN_TYPE := none
-ifeq ($(MODULE_BIN_TYPE), )
-MODULE_BIN_TYPE := $(EXEC_BIN_TYPE)
+SBS_EXEC_BIN_TYPE := exec
+SBS_SHARED_BING_TYPE := shared
+SBS_STATIC_BIN_TYPE := static
+SBS_NONE_BIN_TYPE := none
+SBS_BIN_TYPE := $(MODULE_BIN_TYPE)
+ifeq ($(SBS_BIN_TYPE), )
+SBS_BIN_TYPE := $(SBS_EXEC_BIN_TYPE)
 endif
 
-ifeq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE) $(STATIC_BIN_TYPE) $(NONE_BIN_TYPE)),)
-$(error Unkonwn module type $(MODULE_BIN_TYPE))
+ifeq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BING_TYPE) $(SBS_STATIC_BIN_TYPE) $(SBS_NONE_BIN_TYPE)),)
+$(error Unkonwn module type $(SBS_BIN_TYPE))
 endif
 
-ifneq ($(filter $(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE) $(SHARED_BIN_TYPE)),) # Executable or shared
+ifneq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BING_TYPE)),) # Executable or shared
 
-LD := $(MODULE_LD)
-ifeq ($(LD),)
-SOURCE_SUFFIXES := $(suffix $(MODULE_SRCS))
-CXX_SUFFIXES_DOT := $(addprefix .,$(MODULE_CXX_SUFFIXES))
-ifeq ($(filter $(SOURCE_SUFFIXES),$(CXX_SUFFIXES_DOT)),)
-LD := $(CC)
+SBS_LD := $(MODULE_LD)
+ifeq ($(SBS_LD),)
+SBS_SRC_SUFFIXES := $(suffix $(MODULE_SRCS))
+SBS_CXX_SUFFIXES_DOT := $(addprefix .,$(SBS_CXX_SUFFIXES))
+ifeq ($(filter $(SBS_SRC_SUFFIXES),$(SBS_CXX_SUFFIXES_DOT)),)
+SBS_LD := $(SBS_CC)
 else
-LD := $(CCPP)
+SBS_LD := $(SBS_CCPP)
 endif
 endif
 
-OUTPUT_FLAG := -o
-LD_TOOL_STR := LD
+SBS_OUTPUT_FLAG := -o
+SBS_LD_STR := LD
 
-ifeq ($(MODULE_BIN_TYPE), $(EXEC_BIN_TYPE))
-ARTIFACT := $(MODULE_NAME)
+ifeq ($(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE))
+SBS_ARTIFACT := $(SBS_MODULE_NAME)
 else
-LDFLAGS += -shared
-CFLAGS += -fpic
-ARTIFACT := lib$(MODULE_NAME).so
+SBS_LDFLAGS += -shared
+SBS_CFLAGS += -fpic
+SBS_ARTIFACT := lib$(SBS_MODULE_NAME).so
 endif
 endif # Executable or shared
 
@@ -100,160 +105,162 @@ endif # Executable or shared
 # s - Add an index to the archive
 # v - be verbose
 # c - suppress archive creation message
-ifeq ($(MODULE_BIN_TYPE), $(STATIC_BIN_TYPE))
-LD := ar
+ifeq ($(SBS_BIN_TYPE), $(SBS_STATIC_BIN_TYPE))
+SBS_LD := ar
 ifeq ($(MODULE_VERBOSE),1)
-LDFLAGS := -rscv
+SBS_LDFLAGS := -rscv
 else
-LDFLAGS := -rsc
+SBS_LDFLAGS := -rsc
 endif
 
-ARTIFACT := lib$(MODULE_NAME).a
-LD_TOOL_STR := AR
+SBS_ARTIFACT := lib$(SBS_MODULE_NAME).a
+SBS_LD_STR := AR
 endif
 
-ifeq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
-ARTIFACT := $(MODULE_NAME)
+ifeq ($(SBS_BIN_TYPE), $(SBS_NONE_BIN_TYPE))
+SBS_ARTIFACT := $(SBS_MODULE_NAME)
 endif
 
 # Handle Release/Debug specific settings
-REL_FLAV := rel
-DBG_FLAV := dbg
+SBS_REL_FLAV := rel
+SBS_DBG_FLAV := dbg
 
-ifeq ($(MODULE_FLAV),)
-MODULE_FLAV := $(DBG_FLAV)
+SBS_FLAV := $(MODULE_FLAV)
+ifeq ($(SBS_FLAV),)
+SBS_FLAV := $(SBS_DBG_FLAV)
 endif
 
-ifneq ($(words $(MODULE_FLAV)), 1)
-$(error Invalid flavor '$(MODULE_FLAV)')
+ifneq ($(words $(SBS_FLAV)), 1)
+$(error Invalid flavor '$(SBS_FLAV)')
 endif
 
-ifeq ($(MODULE_USE_DEF_FLAV),)
-MODULE_USE_DEF_FLAV := 1
+SBS_USE_DEF_FLAV := $(MODULE_USE_DEF_FLAV)
+ifeq ($(SBS_USE_DEF_FLAV),)
+SBS_USE_DEF_FLAV := 1
 endif
-ifeq ($(filter $(MODULE_USE_DEF_FLAV),1 0),)
-$(error Illegal default flavor options setting '$(MODULE_USE_DEF_FLAV)')
+ifeq ($(filter $(SBS_USE_DEF_FLAV),1 0),)
+$(error Illegal default flavor options setting '$(SBS_USE_DEF_FLAV)')
 endif
 
-ifneq ($(filter $(MODULE_FLAV),$(REL_FLAV) $(DBG_FLAV)),)
-ifneq ($(MODULE_USE_DEF_FLAV),0)
-ifeq ($(MODULE_FLAV),$(REL_FLAV))
-CFLAGS += -O3
+ifneq ($(filter $(SBS_FLAV),$(SBS_REL_FLAV) $(SBS_DBG_FLAV)),)
+ifneq ($(SBS_USE_DEF_FLAV),0)
+ifeq ($(SBS_FLAV),$(SBS_REL_FLAV))
+SBS_CFLAGS += -O3
 else
-CFLAGS += -g -O0
-CDEFS += DEBUG=1 __DEBUG__=1
+SBS_CFLAGS += -g -O0
+SBS_CDEFS += DEBUG=1 __DEBUG__=1
 endif
 endif
 endif
 
 ifeq ($(MODULE_USE_PTHREAD),1)
-CFLAGS += -pthread
-ifneq ($(MODULE_BIN_TYPE), $(STATIC_BIN_TYPE))
-LDFLAGS += -pthread
+SBS_CFLAGS += -pthread
+ifneq ($(SBS_BIN_TYPE), $(SBS_STATIC_BIN_TYPE))
+SBS_LDFLAGS += -pthread
 endif
 endif
 
-SRCS := $(abspath $(MODULE_SRCS))
-SRCS := $(subst $(MODULE_PATH)/,,$(SRCS))
+SBS_SRCS := $(abspath $(MODULE_SRCS))
+SBS_SRCS := $(subst $(SBS_MODULE_PATH)/,,$(SBS_SRCS))
 
-MODULE_OBJS_PATH := $(MODULE_PATH)/obj/$(MODULE_FLAV)
-OBJS := $(addsuffix .o,$(strip $(SRCS)))
-OBJS := $(addprefix $(MODULE_OBJS_PATH)/, $(OBJS))
-OBJS_DEPS := $(OBJS:.o=.d)
+SBS_OBJS_PATH := $(SBS_MODULE_PATH)/obj/$(SBS_FLAV)
+SBS_OBJS := $(addsuffix .o,$(strip $(SBS_SRCS)))
+SBS_OBJS := $(addprefix $(SBS_OBJS_PATH)/, $(SBS_OBJS))
+SBS_OBJS_DEPS := $(SBS_OBJS:.o=.d)
 
 ifeq ($(MODULE_ARTIFACT_DIR),)
-ARTIFACT_DIR := $(MODULE_OBJS_PATH)
+SBS_ARTIFACT_DIR := $(SBS_OBJS_PATH)
 else
 ifeq ($(MODULE_ARTIFACT_DIR_REL),1)
-ARTIFACT_DIR := $(PROJECT_ROOT_PATH)/$(MODULE_ARTIFACT_DIR)
+SBS_ARTIFACT_DIR := $(SBS_PROJ_ROOT)/$(MODULE_ARTIFACT_DIR)
 else
-ARTIFACT_DIR := $(MODULE_ARTIFACT_DIR)
+SBS_ARTIFACT_DIR := $(MODULE_ARTIFACT_DIR)
 endif
 endif
 
-ARTIFACT := $(ARTIFACT_DIR)/$(ARTIFACT)
+SBS_ARTIFACT := $(SBS_ARTIFACT_DIR)/$(SBS_ARTIFACT)
 
-INCLUDE_DIRS := $(MODULE_INCLUDE_DIRS)
-INCLUDE_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_INCLUDE_DIRS))
+SBS_INC_DIRS := $(MODULE_INCLUDE_DIRS)
+SBS_INC_DIRS += $(addprefix $(SBS_PROJ_ROOT)/,$(MODULE_PROJECT_INCLUDE_DIRS))
 
 ifeq ($(MODULE_CFLAGS_OVERRIDE),)
-CFLAGS += $(addprefix -W,$(CWARNS)) $(addprefix -D,$(CDEFS)) $(addprefix -I,$(INCLUDE_DIRS))
+SBS_CFLAGS += $(addprefix -W,$(SBS_CWARNS)) $(addprefix -D,$(SBS_CDEFS)) $(addprefix -I,$(SBS_INC_DIRS))
 else
-CFLAGS := $(MODULE_CFLAGS_OVERRIDE)
+SBS_CFLAGS := $(MODULE_CFLAGS_OVERRIDE)
 endif
 
 # Generate the library link flags for the build. These are generated by two
 # parts. The path the libraries are looked in, and the libraries themselves.
-# The library flags are separated from the link flags (LDFLAGS) since when a module
+# The library flags are separated from the link flags (SBS_LDFLAGS) since when a module
 # uses a static library, it should always come _after_ the module objects, or
 # an undefined reference error is issued. For dynamic libraries it doesn't
 # matter.
-ifneq ($(MODULE_BIN_TYPE),$(STATIC_BIN_TYPE))
-LIB_DIRS := $(MODULE_LIB_DIRS)
-LIB_DIRS += $(addprefix $(PROJECT_ROOT_PATH)/,$(MODULE_PROJECT_LIB_DIRS))
-LIBS_FLAGS := $(addprefix -L,$(LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
+ifneq ($(SBS_BIN_TYPE),$(SBS_STATIC_BIN_TYPE))
+SBS_LIB_DIRS := $(MODULE_LIB_DIRS)
+SBS_LIB_DIRS += $(addprefix $(SBS_PROJ_ROOT)/,$(MODULE_PROJECT_LIB_DIRS))
+SBS_LIBS_FLAGS := $(addprefix -L,$(SBS_LIB_DIRS)) $(addprefix -l,$(MODULE_LIBS))
 endif # Binary that isn't static library
 
 # Handle linking flags overrides/additions
 ifneq ($(MODULE_LDFLAGS_OVERRIDE),)
-LDFLAGS := $(MODULE_LDFLAGS_OVERRIDE)
+SBS_LDFLAGS := $(MODULE_LDFLAGS_OVERRIDE)
 endif
 
 # Strip the build flags. Not necessary, but creates a tighter output
-CFLAGS := $(strip $(CFLAGS))
-LDFLAGS := $(strip $(LDFLAGS))
-LIBS_FLAGS := $(strip $(LIBS_FLAGS))
+SBS_CFLAGS := $(strip $(SBS_CFLAGS))
+SBS_LDFLAGS := $(strip $(SBS_LDFLAGS))
+SBS_LIBS_FLAGS := $(strip $(SBS_LIBS_FLAGS))
 
 ifneq ($(filter 1,$(MODULE_VERBOSE)),1)
-Q := @
+SBS_Q := @
 endif
 
 # The empty target is added as an ordered dependency so the binary rule
 # will always require *something* to do. This way we can suppress the 'up to date'
 # messages without silencing the entire build output.
-$(ARTIFACT): $(OBJS) $(MODULE_EXTERN_OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(EMPTY_TARGET)
-ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
-	@mkdir -p $(ARTIFACT_DIR)
-	$(if $(Q),@$(ECHO) -e "$(LD_TOOL_STR)\t$(notdir $@)")
-	$(Q)$(LD) $(LDFLAGS) $(OUTPUT_FLAG) $(ARTIFACT) $(OBJS) $(MODULE_EXTERN_OBJS) $(LIBS_FLAGS)
+$(SBS_ARTIFACT): $(SBS_OBJS) $(MODULE_EXTERN_OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(SBS_EMPTY_TARGET)
+ifneq ($(SBS_BIN_TYPE), $(SBS_NONE_BIN_TYPE))
+	@mkdir -p $(SBS_ARTIFACT_DIR)
+	$(if $(SBS_Q),@$(ECHO) -e "$(SBS_LD_STR)\t$(notdir $@)")
+	$(SBS_Q)$(SBS_LD) $(SBS_LDFLAGS) $(SBS_OUTPUT_FLAG) $(SBS_ARTIFACT) $(SBS_OBJS) $(MODULE_EXTERN_OBJS) $(SBS_LIBS_FLAGS)
 else
-.PHONY: $(ARTIFACT)
+.PHONY: $(SBS_ARTIFACT)
 endif
 
 # $1 - source suffix
-# $2 - compiler print string (CC or CXX)
+# $2 - compiler print string (SBS_CC or CXX)
 # $3 - compiler binary (gcc or g++)
 # 1st rule - in-tree source files
 # 2nd rule - out-of-tree source files
 define CreateSourceRules
-$$(MODULE_OBJS_PATH)/%.$1.o: $$(MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
+$$(SBS_OBJS_PATH)/%.$1.o: $$(SBS_MODULE_PATH)/%.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@$(ECHO) -e "$2\t$$(subst $$(MODULE_PATH)/,,$$<)")
-	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
+	$$(if $$(SBS_Q),@$(ECHO) -e "$2\t$$(subst $$(SBS_MODULE_PATH)/,,$$<)")
+	$$(SBS_Q)$3 $$(SBS_CFLAGS) -c $$< -o $$@
 
-$$(MODULE_OBJS_PATH)/%.$1.o: %.$1 $$(MAKEFILE_LIST)
+$$(SBS_OBJS_PATH)/%.$1.o: %.$1 $$(MAKEFILE_LIST)
 	@mkdir -p $$(dir $$@)
-	$$(if $$(Q),@$(ECHO) -e "$2\t$$<")
-	$$(Q)$3 $$(CFLAGS) -c $$< -o $$@
+	$$(if $$(SBS_Q),@$(ECHO) -e "$2\t$$<")
+	$$(SBS_Q)$3 $$(SBS_CFLAGS) -c $$< -o $$@
 endef
 
-$(foreach SUFFIX,$(MODULE_C_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CC,$(CC))))
-$(foreach SUFFIX,$(MODULE_CXX_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CXX,$(CCPP))))
+$(foreach SUFFIX,$(SBS_C_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CC,$(SBS_CC))))
+$(foreach SUFFIX,$(SBS_CXX_SUFFIXES),$(eval $(call CreateSourceRules,$(SUFFIX),CXX,$(SBS_CCPP))))
 
 # Include objects dependencies settings if such exist
 ifneq ($(MAKECMDGOALS),clean)
--include $(OBJS_DEPS)
+-include $(SBS_OBJS_DEPS)
 endif
 
-CLEAN_FILES := $(OBJS) $(OBJS_DEPS)
-ifneq ($(MODULE_BIN_TYPE), $(NONE_BIN_TYPE))
-CLEAN_FILES += $(ARTIFACT)
+SBS_CLEAN_FILES := $(SBS_OBJS) $(SBS_OBJS_DEPS)
+ifneq ($(SBS_BIN_TYPE), $(SBS_NONE_BIN_TYPE))
+SBS_CLEAN_FILES += $(SBS_ARTIFACT)
 endif
-$(ARTIFACT)_clean:
-	$(Q)rm -f $(CLEAN_FILES)
+$(SBS_ARTIFACT)_clean:
+	$(SBS_Q)rm -f $(SBS_CLEAN_FILES)
 
-MAIN_TARGET := $(ARTIFACT)
-CLEAN_TARGET := $(ARTIFACT)_clean
+SBS_MAIN_TARGET := $(SBS_ARTIFACT)
+SBS_CLEAN_TARGET := $(SBS_ARTIFACT)_clean
 
 endif # None empty target
 ######################### Binary build end #########################
@@ -262,27 +269,27 @@ ifneq ($(MODULE_SUB_MODULES),)
 $(MODULE_SUB_MODULES):
 	@$(MAKE) -C $@
 
-SUB_MODULE_CLEAN_SUFFIX := __clean
-SUB_MODULES_CLEAN := $(addsuffix $(SUB_MODULE_CLEAN_SUFFIX),$(MODULE_SUB_MODULES))
-$(SUB_MODULES_CLEAN):
-	@$(MAKE) -C $(@:$(SUB_MODULE_CLEAN_SUFFIX)=) clean
+SBS_CLEAN_SUFFIX := __clean
+SBS_SUBMODULES_CLEAN := $(addsuffix $(SBS_CLEAN_SUFFIX),$(MODULE_SUB_MODULES))
+$(SBS_SUBMODULES_CLEAN):
+	@$(MAKE) -C $(@:$(SBS_CLEAN_SUFFIX)=) clean
 endif
 
 # Set the default target to 'all'. Make just picks up the first non empty
 # target (or such). Here we make sure we control the make behavior.
 .DEFAULT_GOAL := all
-.PHONY: all clean $(CLEAN_TARGET)
-.PHONY: $(MODULE_PRE_SUB_MODULES) $(MODULE_SUB_MODULES) $(MODULE_POST_SUB_MODULES) $(SUB_MODULES_CLEAN)
+.PHONY: all clean $(SBS_CLEAN_TARGET)
+.PHONY: $(MODULE_PRE_SUB_MODULES) $(MODULE_SUB_MODULES) $(MODULE_POST_SUB_MODULES) $(SBS_SUBMODULES_CLEAN)
 
-BUILD_ORDER := $(strip $(MODULE_PRE_BUILD) $(MODULE_PRE_SUB_MODULES))
-ifneq ($(ARTIFACT),)
-BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_NAME)))
+SBS_BUILD_ORDER := $(strip $(MODULE_PRE_BUILD) $(MODULE_PRE_SUB_MODULES))
+ifneq ($(SBS_ARTIFACT),)
+SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(SBS_MODULE_NAME)))
 endif
-BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_SUB_MODULES)))
-BUILD_ORDER := $(strip $(BUILD_ORDER) $(strip $(MODULE_POST_BUILD) $(MODULE_POST_SUB_MODULES)))
-ifneq ($(BUILD_ORDER),$(MODULE_NAME))
-ifneq ($(BUILD_ORDER),)
-ORDER_STR := " order=[$(BUILD_ORDER)]"
+SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(MODULE_SUB_MODULES)))
+SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(MODULE_POST_BUILD) $(MODULE_POST_SUB_MODULES)))
+ifneq ($(SBS_BUILD_ORDER),$(SBS_MODULE_NAME))
+ifneq ($(SBS_BUILD_ORDER),)
+SBS_ORDER_STR := " order=[$(SBS_BUILD_ORDER)]"
 endif
 endif
 
@@ -292,17 +299,17 @@ define SbsForEach
 endef
 
 all:
-	@echo "Building '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(call SbsForEach,$(MODULE_PRE_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
+	@echo "Building '$(SBS_MODULE_NAME)'$(SBS_ORDER_STR)"
+	@$(call SbsForEach,$(MODULE_PRE_BUILD),$(MAKE) -f $(SBS_BASE_MAKEFILE))
 	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C)
-	@$(MAKE) -f $(BASE_MAKEFILE) $(MAIN_TARGET) $(MODULE_SUB_MODULES)
+	@$(MAKE) -f $(SBS_BASE_MAKEFILE) $(SBS_MAIN_TARGET) $(MODULE_SUB_MODULES)
 	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C)
-	@$(call SbsForEach,$(MODULE_POST_BUILD),$(MAKE) -f $(BASE_MAKEFILE))
+	@$(call SbsForEach,$(MODULE_POST_BUILD),$(MAKE) -f $(SBS_BASE_MAKEFILE))
 
 clean:
-	@echo "Cleaning '$(MODULE_NAME)'$(ORDER_STR)"
-	@$(call SbsForEach,$(MODULE_PRE_CLEAN),$(MAKE) -f $(BASE_MAKEFILE))
+	@echo "Cleaning '$(SBS_MODULE_NAME)'$(SBS_ORDER_STR)"
+	@$(call SbsForEach,$(MODULE_PRE_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))
 	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C, clean)
-	@$(MAKE) -f $(BASE_MAKEFILE) $(CLEAN_TARGET) $(SUB_MODULES_CLEAN)
+	@$(MAKE) -f $(SBS_BASE_MAKEFILE) $(SBS_CLEAN_TARGET) $(SBS_SUBMODULES_CLEAN)
 	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C, clean)
-	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(BASE_MAKEFILE))
+	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))

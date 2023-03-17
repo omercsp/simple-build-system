@@ -208,6 +208,9 @@ Occasionally, one might want to have explicit Makefile names in a given director
 1. Submodules are always built using a default Makefile.
 2. While true for Makefile in general, it's still worth mentioning that more than one Makefile in the same directory (i.e. `Makefile.A` and `Makefile.B`) are hard to maintain and should be carefully written so they won't overwrite one another output. It is best avoided.
 
+## SBS variables and targets naming
+SBS defines internally variables and make targets prefixed with `sbs` and `SBS`. When writing SBS makefiles, the author should avoid any variables and targets with these prefixes, as they might get overridden.
+
 ## FAQ
 ### How to add an include directory?
 With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>` flag. So a setting of
