@@ -4,6 +4,7 @@ ECHO := /usr/bin/echo
 MAKEFLAGS := --no-print-directory
 SBS_MODULE_PATH := $(shell pwd)
 SBS_BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
+SBS_VERSION := 0.4.1-0
 
 # If no module name is defined use the directory as the name
 SBS_MODULE_NAME := $(MODULE_NAME)
@@ -313,3 +314,7 @@ clean:
 	@$(MAKE) -f $(SBS_BASE_MAKEFILE) $(SBS_CLEAN_TARGET) $(SBS_SUBMODULES_CLEAN)
 	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C, clean)
 	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))
+
+sbs_version:
+	@echo SBS version $(SBS_VERSION)
+
