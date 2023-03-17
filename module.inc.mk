@@ -321,3 +321,108 @@ clean:
 sbs_version:
 	@echo SBS version $(SBS_VERSION)
 
+define SbsDbgTitle
+	TITLE="$(1)"; \
+	COND_VALUE="$(2)"; \
+	COND_VALUE="$${COND_VALUE#"$${COND_VALUE%%[![:space:]]*}"}"; \
+	if [[ -z $${SBS_DBG_TERMS} && -n $${COND_VALUE} ]]; then \
+		echo; \
+		echo $${TITLE} ;\
+		echo $${TITLE//?/=} ;\
+	fi
+endef
+
+define SbsDbgVar
+	NAME=$(1); \
+	VALUE="$($(1))"; \
+	if [[ -n $${VALUE} || $${SBS_FORCE_DBG} -eq 1 ]] && \
+	   [[ -z $${SBS_DBG_TERMS} || $${NAME} == *"$${SBS_DBG_TERMS}"* ]]; then \
+		if (( $${#VALUE} > $$(tput cols) -30 -5 )); then \
+			printf "%s:\n" $${NAME}; \
+			for i in $${VALUE}; do \
+				printf "%-30s%s\n" "" "$${i}"; \
+			done;\
+		else \
+			printf "%-30s%s\n" $${NAME}: "$${VALUE}"; \
+		fi; \
+	fi
+endef
+
+sbs_dump_module_vars:
+	@echo $(SBS_FORCE_DBG)
+	@$(call SbsDbgTitle,Base Module Settings,Always)
+	@$(call SbsDbgVar,MODULE_NAME)
+	@$(call SbsDbgVar,MODULE_SRCS)
+	@$(call SbsDbgVar,MODULE_LANG)
+	@$(call SbsDbgVar,MODULE_FLAV)
+	@$(call SbsDbgVar,MODULE_CSUITE)
+	@$(call SbsDbgVar,MODULE_C_SUFFIXES)
+	@$(call SbsDbgVar,MODULE_CXX_SUFFIXES)
+	@$(call SbsDbgVar,MODULE_USE_PTHREAD)
+	@$(call SbsDbgVar,MODULE_CDEFS)
+	@$(call SbsDbgVar,MODULE_CWARNS)
+	@$(call SbsDbgVar,MODULE_INCLUDE_DIRS)
+	@$(call SbsDbgVar,MODULE_PROJECT_INCLUDE_DIRS)
+	@$(call SbsDbgVar,MODULE_DEP_FLAGS)
+	@$(call SbsDbgVar,MODULE_CFLAGS)
+	@$(call SbsDbgVar,MODULE_CFLAGS_OVERRIDE)
+	@$(call SbsDbgVar,MODULE_LDFLAGS)
+	@$(call SbsDbgVar,MODULE_LDFLAGS_OVERRIDE)
+	@$(call SbsDbgVar,MODULE_LIBS)
+	@$(call SbsDbgVar,MODULE_LIB_DIRS)
+	@$(call SbsDbgVar,MODULE_PROJECT_LIB_DIRS)
+	@$(call SbsDbgVar,MODULE_EXTERN_OBJS)
+	@$(call SbsDbgVar,MODULE_LD)
+	@$(call SbsDbgVar,MODULE_ARTIFACT_DIR)
+
+sbs_dump_module_submodules:
+	@$(call SbsDbgTitle,Submodules Settings,\
+		$(MODULE_SUB_MODULES) $(MODULE_PRE_SUB_MODULES) $(MODULE_POST_SUB_MODULES))
+	@$(call SbsDbgVar,MODULE_PRE_SUB_MODULES)
+	@$(call SbsDbgVar,MODULE_SUB_MODULES)
+	@$(call SbsDbgVar,MODULE_POST_SUB_MODULES)
+
+sbs_dump_module_build_steps:
+	@$(call SbsDbgTitle,Build Steps,\
+		$(MODULE_PRE_BUILD) $(MODULE_POST_BUILD) $(MODULE_PRE_CLEAN) $(MODULE_POST_CLEAN))
+	@$(call SbsDbgVar,MODULE_PRE_BUILD)
+	@$(call SbsDbgVar,MODULE_POST_BUILD)
+	@$(call SbsDbgVar,MODULE_PRE_CLEAN)
+	@$(call SbsDbgVar,MODULE_POST_CLEAN)
+
+sbs_dump_module: sbs_dump_module_vars sbs_dump_module_submodules sbs_dump_module_build_steps
+
+sbs_dump_internals:
+	@$(call SbsDbgTitle,Base SBS Settings,Always)
+	@$(call SbsDbgVar,SBS_MODULE_NAME)
+	@$(call SbsDbgVar,SBS_MODULE_PATH)
+	@$(call SbsDbgVar,SBS_PROJ_ROOT)
+	@$(call SbsDbgVar,SBS_BASE_MAKEFILE)
+	@$(call SbsDbgVar,SBS_VERSION)
+	@$(call SbsDbgTitle,Build Settings,Always)
+	@$(call SbsDbgVar,SBS_BIN_TYPE)
+	@$(call SbsDbgVar,SBS_FLAV)
+	@$(call SbsDbgVar,SBS_MAIN_TARGET)
+	@$(call SbsDbgVar,SBS_CLEAN_TARGET)
+	@$(call SbsDbgVar,SBS_SRCS)
+	@$(call SbsDbgVar,SBS_CDEFS)
+	@$(call SbsDbgVar,SBS_CWARNS)
+	@$(call SbsDbgVar,SBS_INC_DIRS)
+	@$(call SbsDbgVar,SBS_CFLAGS)
+	@$(call SbsDbgVar,SBS_LD)
+	@$(call SbsDbgVar,SBS_LIB_DIRS)
+	@$(call SbsDbgVar,SBS_LIBS_FLAGS)
+	@$(call SbsDbgVar,SBS_LDFLAGS)
+	@$(call SbsDbgVar,SBS_OBJS_PATH)
+	@$(call SbsDbgVar,SBS_OBJS)
+	@$(call SbsDbgVar,SBS_OBJS_DEPS)
+	@$(call SbsDbgVar,SBS_ARTIFACT)
+	@$(call SbsDbgVar,SBS_ARTIFACT_DIR)
+	@$(call SbsDbgVar,SBS_C_SUFFIXES)
+	@$(call SbsDbgVar,SBS_CXX_SUFFIXES)
+	@$(call SbsDbgVar,SBS_CSUITE)
+	@$(call SbsDbgVar,SBS_CC)
+	@$(call SbsDbgVar,SBS_CCPP)
+
+sbs_dump_all: sbs_dump_module sbs_dump_internals
+
