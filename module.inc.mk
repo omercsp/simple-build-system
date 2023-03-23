@@ -1,3 +1,6 @@
+# Simple Build System, written by Omer Caspi
+# https://github.com/omercsp/simple-build-system
+
 SBS_PROJ_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 SHELL := /usr/bin/bash
 ECHO := /usr/bin/echo
