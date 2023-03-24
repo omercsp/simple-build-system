@@ -211,6 +211,33 @@ Occasionally, one might want to have explicit Makefile names in a given director
 ## SBS variables and targets naming
 SBS defines internally variables and make targets prefixed with `sbs` and `SBS`. When writing SBS makefiles, the author should avoid any variables and targets with these prefixes, as they might get overridden.
 
+SBS defines many variables upon the inclusion of `moddule.inc.mk`, all can be used *after* the include directive. For example, `SBS_OBJS` contains all the object files a give SBS module creates. There are many such variables, and in some cases these might be useful to the author. To see all the internal variables, use `make sbs_dump_internals` over a your module. See the [debugging](#sbs debugging) section.
+
+## SBS debugging
+In the rare and unheard of case of a buggy build, SBS provides a couple of debugging mechanics:
+### Variables dump
+SBS auto defines a few targets for variables inspection so the user can use to get insights into SBS mechanics:
+1. `sbs_dump_internals` - Shows all the SBS internal variables generated after the `module.inc.mk` inclusion, based on the module's Makefile
+2. `sbs_dump_module_vars` - Shows the received module variables.
+3. `sbs_dump_module_submodules` - Shows the module's sub-modules variables.
+4. `sbs_dump_module_build_steps` - Shows all the module's build steps (i.e. Pre and post build) variables.
+
+- All the variables shown by the `sbs_dump_internals` are available *after* the inclusion of the `module.inc.mk` file.
+- The `sbs_dump_module_<TYPE>` variants are helpful when working projects where modules makefiles are generated or include other makefiles (as often happens when managing flavors). In the simple case of a self contained module, the target will just echo the module's Makefile variables.
+- By default, SBS only dumps none-empty variables. To show all variables regardless of there content, set `SBS_FORCE_DBG` to `1` on invoke. For example on `sbs_dump_module_vars`: `make SBS_FORCE_DBG=1 sbs_dump_module_vars`.
+- A target named `sbs_dump_module` combines dump of all module's dump target
+- A target named `sbs_dump_all` combines dump of all module's dump target and the SBS internal target.
+### Verbose output
+Setting `MODULE_VERBOSE` to `1` will generate the full build and link commands instead of the easier on the eyes `CC <FILE>` and `LD <FILE>` messages. After setting `MODULE_VERBOSE` to `1` in the quick start example, the output might look like this:
+```bash
+project $ make clean; make
+Cleaning 'my_prog'
+rm -f /home/user/project/obj/dbg/main.c.o /home/user/project/obj/dbg/main.c.d /home/user/project/obj/dbg/my_prog
+Building 'my_prog'
+gcc -MMD -MP -g -O0 -DDEBUG=1 -D__DEBUG__=1 -c /home/user/project/main.c -o /home/user/project/obj/dbg/main.c.o
+gcc  -o /home/user/project/obj/dbg/my_prog /home/user/project/obj/dbg/main.c.o
+```
+
 ## FAQ
 ### How to add an include directory?
 With `MODULE_INCLUDE_DIRS`. Each entry `<DIR>` in the setting yields a `-I<DIR>` flag. So a setting of
@@ -281,13 +308,6 @@ Note, however, that this setting overrides the default C++ source suffixes, so c
 
 ### How to add other compilation and linking flags?
 By setting `MODULE_CFLAGS` and `MODULE_LDFLAGS`. These will add their value 'as is' to the compile and link steps.
-
-### How to show the full compilation and linking commands and output?
-By setting `MODULE_VERBOSE` to `1`
-
-```makefile
-MODULE_VERBOSE := 1
-```
 
 ### How to change the artifact output location?
 By setting `MODULE_ARTIFACT_DIR` to the desired output directory.
