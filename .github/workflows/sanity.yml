@@ -2,6 +2,9 @@ name: Sanity
 
 on:
   push:
+    branches:
+      - master
+      - devel
 
 jobs:
   test:
