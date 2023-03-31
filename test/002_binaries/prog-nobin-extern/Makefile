@@ -10,5 +10,5 @@ endif
 
 MODULE_EXTERN_OBJS := ../nobin/obj/$(FLAV)/nobin0.c.o ../nobin/obj/$(FLAV)/nobin1.c.o
 
-include ../../../module.inc.mk
-
+PROJ_ROOT := $(shell git rev-parse --show-toplevel)
+include $(PROJ_ROOT)/module.inc.mk
