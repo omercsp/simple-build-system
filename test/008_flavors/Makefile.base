@@ -1,7 +1,7 @@
 MODULE_NAME := flavor
-TOP_LEVEL=$(shell git rev-parse --show-toplevel)
 MODULE_SRCS := main.c
 MODULE_USE_DEF_FLAV :=
 MODULE_FLAV :=
 
+TOP_LEVEL=$(shell git rev-parse --show-toplevel)
 include $(TOP_LEVEL)/module.inc.mk
