@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 sharedlib_dir=${here}/sharedlib
 sharedlib_dir_obj=${sharedlib_dir}/obj

@@ -10,5 +10,6 @@ MODULE_VERBOSE := 1
 MODULE_ARTIFACT_DIR := $(MY_PROJECT_LIB_ARTIFACT_DIR)
 MODULE_ARTIFACT_DIR_REL := 1
 
-include ../../../module.inc.mk
+PROJ_ROOT := $(shell git rev-parse --show-toplevel)
+include $(PROJ_ROOT)/module.inc.mk
 

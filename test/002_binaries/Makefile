@@ -9,4 +9,5 @@ prog-with-out-of-tree-src: multi-lang2
 multi-lang2__clean: prog__clean
 prog-with-out-of-tree-src__clean: multi-lang2__clean
 
-include ../../module.inc.mk
+PROJ_ROOT=$(shell git rev-parse --show-toplevel)
+include $(PROJ_ROOT)/module.inc.mk
