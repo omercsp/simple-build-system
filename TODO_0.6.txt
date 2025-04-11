@@ -1,0 +1,13 @@
+- Build by dependency rehaul
+- Build by dependency tests
+- Build by dependency documentation
+- Add message supression tests
+- Add debug tests
+- Move away from source list to C sources and CPP sources, removing the language suffixes settings
+- Add hooks for post link and post compile
+- Remove the MODULE_ARTIFACT_DIR_REL setting; determine if the module artifact directory is relative
+  from the path string (start with "/" or not)
+- Add quiet mode
+- Add ability to run single module without any submodules
+- Add dry-run mode
+- Retain the "up to date" messages
