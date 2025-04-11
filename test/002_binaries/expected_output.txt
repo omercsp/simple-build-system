@@ -2,37 +2,37 @@ Testing 'gcc/dbg'
 =================
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Cleaning 'dynamic' order=[dynamic dynlib_tester]
+Cleaning 'binaries'
+Cleaning 'dynamic'
 Cleaning 'dyn_tester'
-Cleaning 'static'
-Cleaning 'nobin'
 Cleaning 'multi-lang'
-Cleaning 'prog' order=[__pre_build prog __post_build]
 Cleaning 'multi-lang2'
-Cleaning 'prog-with-out-of-tree-src'
-Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'nobin'
+Cleaning 'nobin'
+Cleaning 'prog'
+Cleaning 'prog2'
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Cleaning 'nobin'
+Cleaning 'prog-nobin-extern'
+Cleaning 'prog-with-out-of-tree-src'
+Cleaning 'static'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Building 'dynamic' order=[dynamic dynlib_tester]
+Building 'binaries'
+Building 'dynamic'
 Building 'dyn_tester'
-Building 'static'
-Building 'nobin'
 Building 'multi-lang'
-Building 'prog' order=[__pre_build prog __post_build]
 Building 'multi-lang2'
-Building 'prog-with-out-of-tree-src'
-Building 'prog2' order=[prog2_dynlib prog2]
+Building 'nobin'
+Building 'nobin'
+Building 'prog'
+Building 'prog2'
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Building 'nobin'
+Building 'prog-nobin-extern'
+Building 'prog-with-out-of-tree-src'
+Building 'static'
 
 Checking binaries output
 ------------------------
@@ -103,37 +103,37 @@ Testing 'gcc/rel'
 =================
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Cleaning 'dynamic' order=[dynamic dynlib_tester]
+Cleaning 'binaries'
+Cleaning 'dynamic'
 Cleaning 'dyn_tester'
-Cleaning 'static'
-Cleaning 'nobin'
 Cleaning 'multi-lang'
-Cleaning 'prog' order=[__pre_build prog __post_build]
 Cleaning 'multi-lang2'
-Cleaning 'prog-with-out-of-tree-src'
-Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'nobin'
+Cleaning 'nobin'
+Cleaning 'prog'
+Cleaning 'prog2'
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Cleaning 'nobin'
+Cleaning 'prog-nobin-extern'
+Cleaning 'prog-with-out-of-tree-src'
+Cleaning 'static'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Building 'dynamic' order=[dynamic dynlib_tester]
+Building 'binaries'
+Building 'dynamic'
 Building 'dyn_tester'
-Building 'static'
-Building 'nobin'
 Building 'multi-lang'
-Building 'prog' order=[__pre_build prog __post_build]
 Building 'multi-lang2'
-Building 'prog-with-out-of-tree-src'
-Building 'prog2' order=[prog2_dynlib prog2]
+Building 'nobin'
+Building 'nobin'
+Building 'prog'
+Building 'prog2'
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Building 'nobin'
+Building 'prog-nobin-extern'
+Building 'prog-with-out-of-tree-src'
+Building 'static'
 
 Checking binaries output
 ------------------------
@@ -204,37 +204,37 @@ Testing 'clang/dbg'
 =================
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Cleaning 'dynamic' order=[dynamic dynlib_tester]
+Cleaning 'binaries'
+Cleaning 'dynamic'
 Cleaning 'dyn_tester'
-Cleaning 'static'
-Cleaning 'nobin'
 Cleaning 'multi-lang'
-Cleaning 'prog' order=[__pre_build prog __post_build]
 Cleaning 'multi-lang2'
-Cleaning 'prog-with-out-of-tree-src'
-Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'nobin'
+Cleaning 'nobin'
+Cleaning 'prog'
+Cleaning 'prog2'
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Cleaning 'nobin'
+Cleaning 'prog-nobin-extern'
+Cleaning 'prog-with-out-of-tree-src'
+Cleaning 'static'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Building 'dynamic' order=[dynamic dynlib_tester]
+Building 'binaries'
+Building 'dynamic'
 Building 'dyn_tester'
-Building 'static'
-Building 'nobin'
 Building 'multi-lang'
-Building 'prog' order=[__pre_build prog __post_build]
 Building 'multi-lang2'
-Building 'prog-with-out-of-tree-src'
-Building 'prog2' order=[prog2_dynlib prog2]
+Building 'nobin'
+Building 'nobin'
+Building 'prog'
+Building 'prog2'
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Building 'nobin'
+Building 'prog-nobin-extern'
+Building 'prog-with-out-of-tree-src'
+Building 'static'
 
 Checking binaries output
 ------------------------
@@ -305,37 +305,37 @@ Testing 'clang/rel'
 =================
 Cleaning binaries
 -----------------
-Cleaning 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Cleaning 'dynamic' order=[dynamic dynlib_tester]
+Cleaning 'binaries'
+Cleaning 'dynamic'
 Cleaning 'dyn_tester'
-Cleaning 'static'
-Cleaning 'nobin'
 Cleaning 'multi-lang'
-Cleaning 'prog' order=[__pre_build prog __post_build]
 Cleaning 'multi-lang2'
-Cleaning 'prog-with-out-of-tree-src'
-Cleaning 'prog2' order=[prog2_dynlib prog2]
+Cleaning 'nobin'
+Cleaning 'nobin'
+Cleaning 'prog'
+Cleaning 'prog2'
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Cleaning 'nobin'
+Cleaning 'prog-nobin-extern'
+Cleaning 'prog-with-out-of-tree-src'
+Cleaning 'static'
 
 Building binaries
 -----------------
-Building 'binaries' order=[dynlib staticlib nobin multi-lang prog multi-lang2 prog-with-out-of-tree-src prog2 prog-nobin prog-nobin-extern]
-Building 'dynamic' order=[dynamic dynlib_tester]
+Building 'binaries'
+Building 'dynamic'
 Building 'dyn_tester'
-Building 'static'
-Building 'nobin'
 Building 'multi-lang'
-Building 'prog' order=[__pre_build prog __post_build]
 Building 'multi-lang2'
-Building 'prog-with-out-of-tree-src'
-Building 'prog2' order=[prog2_dynlib prog2]
+Building 'nobin'
+Building 'nobin'
+Building 'prog'
+Building 'prog2'
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
-Building 'nobin'
+Building 'prog-nobin-extern'
+Building 'prog-with-out-of-tree-src'
+Building 'static'
 
 Checking binaries output
 ------------------------

@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
-flav=${MODULE_FLAV:-dbg}
+here=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 bad_makefile=Makefile.bad
 good_makefile=Makefile.good
 
-cd ${here}
+cd ${here} || exit 1
 
 _run_failed_test()
 {
@@ -38,23 +37,23 @@ obj/dbg/failures
 echo
 # Pre build
 echo "Pre build failure - start"
-_run_failed_test "prebuild0 prebuild1"  "bad_step prebuild0 prebuild1"
+_run_failed_test "prebuild0"  "bad_step prebuild0"
 
 echo "Pre build failure - middle"
 _run_failed_test "prebuild0 prebuild1"  "prebuild0 bad_step prebuild1"
 
 echo "Pre build failure - end"
-_run_failed_test "prebuild0 prebuild1"  "prebuild0 prebuild1 bad_step"
+_run_failed_test "prebuild1"  "prebuild1 bad_step"
 
 # Pre submodules
 echo "Pre sub-modules failure - start"
-_run_failed_test "ok0 ok1" "bad_submodule ok0 ok1"
+_run_failed_test "ok0" "bad_submodule ok0"
 
 echo "Pre sub-modules failure - middle"
 _run_failed_test "ok0 ok1" "ok0 bad_submodule ok1"
 
 echo "Pre sub-modules failure - end"
-_run_failed_test "ok0 ok1" "ok0 ok1 bad_submodule"
+_run_failed_test "ok1" "ok1 bad_submodule"
 
 # Bad current module
 echo "Bad current module"
@@ -62,32 +61,32 @@ _run_failed_test "main.c" "main.c no_src.c"
 
 # Sub-modules
 echo "Sub-modules failure - start"
-_run_failed_test "ok2 ok3" "bad_submodule ok2 ok3"
+_run_failed_test "ok2" "bad_submodule ok2"
 
 echo "Sub-modules failure - middle"
 _run_failed_test "ok2 ok3" "ok2 bad_submodule ok3"
 
 echo "Sub-modules failure - end"
-_run_failed_test "ok2 ok3" "ok2 ok3 bad_submodule"
+_run_failed_test "ok3" "ok3 bad_submodule"
 
 # Post submodules
 echo "Post sub-modules failure - start"
-_run_failed_test "ok4 ok5" "bad_submodule ok4 ok5"
+_run_failed_test "ok4" "bad_submodule ok4"
 
 echo "Post sub-modules failure - middle"
 _run_failed_test "ok4 ok5" "ok4 bad_submodule ok5"
 
 echo "Post sub-modules failure - end"
-_run_failed_test "ok4 ok5" "ok4 ok5 bad_submodule"
+_run_failed_test "ok5" "ok5 bad_submodule"
 
 # Post build
 echo "Post build failure - start"
-_run_failed_test "postbuild0 postbuild1"  "bad_step postbuild0 postbuild1"
+_run_failed_test "postbuild0"  "bad_step postbuild0"
 
 echo "Post build failure - middle"
 _run_failed_test "postbuild0 postbuild1"  "postbuild0 bad_step postbuild1"
 
 echo "Post build failure - end"
-_run_failed_test "postbuild0 postbuild1"  "postbuild0 postbuild1 bad_step"
+_run_failed_test "postbuild1"  "postbuild1 bad_step"
 
 rm ${bad_makefile}

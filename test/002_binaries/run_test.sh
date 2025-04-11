@@ -1,5 +1,5 @@
 #!/bin/bash
-here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+here=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
 TEST_FLAV=${TEST_FLAV:-}
 if [[ -z ${TEST_FLAV} ]]; then
@@ -26,12 +26,12 @@ for csuite in ${TEST_CSUITE}; do
 		set -e
 		echo "Cleaning binaries"
 		echo "-----------------"
-		make -j clean  | grep -E "^Cleaning"
+		make -j clean  | grep -E "^Cleaning" | sort
 		echo
 
 		echo "Building binaries"
 		echo "-----------------"
-		make -j | grep -E "^Building"
+		make -j | grep -E "^Building" | sort
 		echo
 
 		echo "Checking binaries output"
