@@ -6,8 +6,7 @@ SHELL := /usr/bin/bash
 ECHO := /usr/bin/echo
 MAKEFLAGS := --no-print-directory
 SBS_MODULE_PATH := $(shell pwd)
-SBS_BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
-SBS_VERSION := 0.5.1
+SBS_VERSION := 0.6.0a1
 
 # If no module name is defined use the directory as the name
 SBS_MODULE_NAME := $(MODULE_NAME)
@@ -15,16 +14,8 @@ ifeq ($(SBS_MODULE_NAME),)
 SBS_MODULE_NAME := $(notdir $(SBS_MODULE_PATH))
 endif
 
-# Start with empty targets, lets see what the module's Makefile has for us
-SBS_EMPTY_TARGET := sbs_empty_target
-$(SBS_EMPTY_TARGET):
-	@true
-SBS_CLEAN_TARGET := $(SBS_EMPTY_TARGET)
-SBS_MAIN_TARGET := $(SBS_EMPTY_TARGET)
-
 ######################### Binary build start #########################
 ifneq ($(MODULE_SRCS),)
-
 SBS_CFLAGS := $(MODULE_CFLAGS)
 SBS_CDEFS := $(MODULE_CDEFS)
 SBS_CWARNS := $(MODULE_CWARNS)
@@ -188,7 +179,9 @@ SBS_INC_DIRS := $(MODULE_INCLUDE_DIRS)
 SBS_INC_DIRS += $(addprefix $(SBS_PROJ_ROOT)/,$(MODULE_PROJECT_INCLUDE_DIRS))
 
 ifeq ($(MODULE_CFLAGS_OVERRIDE),)
-SBS_CFLAGS += $(addprefix -W,$(SBS_CWARNS)) $(addprefix -D,$(SBS_CDEFS)) $(addprefix -I,$(SBS_INC_DIRS))
+SBS_CFLAGS += $(addprefix -W,$(SBS_CWARNS))
+SBS_CFLAGS += $(addprefix -D,$(SBS_CDEFS))
+SBS_CFLAGS += $(addprefix -I,$(SBS_INC_DIRS))
 else
 SBS_CFLAGS := $(MODULE_CFLAGS_OVERRIDE)
 endif
@@ -219,10 +212,7 @@ ifneq ($(filter 1,$(MODULE_VERBOSE)),1)
 SBS_Q := @
 endif
 
-# The empty target is added as an ordered dependency so the binary rule
-# will always require *something* to do. This way we can suppress the 'up to date'
-# messages without silencing the entire build output.
-$(SBS_ARTIFACT): $(SBS_OBJS) $(MODULE_EXTERN_OBJS) $(MAKEFILE_LIST) $(MODULE_BIN_DEPS) | $(SBS_EMPTY_TARGET)
+$(SBS_ARTIFACT): $(SBS_OBJS) $(MODULE_EXTERN_OBJS) $(MODULE_BIN_DEPS)
 ifneq ($(SBS_BIN_TYPE), $(SBS_NONE_BIN_TYPE))
 	@mkdir -p $(SBS_ARTIFACT_DIR)
 	$(if $(SBS_Q),@$(ECHO) -e "$(SBS_LD_STR)\t$(notdir $@)")
@@ -256,79 +246,146 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(SBS_OBJS_DEPS)
 endif
 
-SBS_CLEAN_FILES := $(SBS_OBJS) $(SBS_OBJS_DEPS)
+SBS_CLN_FILES := $(SBS_OBJS) $(SBS_OBJS_DEPS)
 ifneq ($(SBS_BIN_TYPE), $(SBS_NONE_BIN_TYPE))
-SBS_CLEAN_FILES += $(SBS_ARTIFACT)
+SBS_CLN_FILES += $(SBS_ARTIFACT)
 endif
-$(SBS_ARTIFACT)_clean:
-	$(SBS_Q)rm -f $(SBS_CLEAN_FILES)
 
-SBS_MAIN_TARGET := $(SBS_ARTIFACT)
-SBS_CLEAN_TARGET := $(SBS_ARTIFACT)_clean
+SBS_ARTIFACT_CLN_TGT := $(SBS_ARTIFACT)_clean
+$(SBS_ARTIFACT_CLN_TGT):
+	$(SBS_Q)rm -f $(SBS_CLN_FILES)
 
 endif # None empty target
 ######################### Binary build end #########################
 
-ifneq ($(MODULE_SUB_MODULES),)
-$(MODULE_SUB_MODULES):
-	@$(MAKE) -C $@
-
-SBS_CLEAN_SUFFIX := __clean
-SBS_SUBMODULES_CLEAN := $(addsuffix $(SBS_CLEAN_SUFFIX),$(MODULE_SUB_MODULES))
-$(SBS_SUBMODULES_CLEAN):
-	@$(MAKE) -C $(@:$(SBS_CLEAN_SUFFIX)=) clean
-endif
-
+SBS_ALL_TGT := all
+SBS_CLN_TGT := clean
 # Set the default target to 'all'. Make just picks up the first non empty
 # target (or such). Here we make sure we control the make behavior.
 .DEFAULT_GOAL := all
-.PHONY: all clean $(SBS_CLEAN_TARGET)
-.PHONY: $(MODULE_PRE_SUB_MODULES) $(MODULE_SUB_MODULES) $(MODULE_POST_SUB_MODULES) $(SBS_SUBMODULES_CLEAN)
 
-SBS_BUILD_ORDER := $(strip $(MODULE_PRE_BUILD) $(MODULE_PRE_SUB_MODULES))
-ifneq ($(SBS_ARTIFACT),)
-SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(SBS_MODULE_NAME)))
+SBS_ALL_SUB_MODULES := $(MODULE_PRE_SUB_MODULES)
+SBS_ALL_SUB_MODULES += $(MODULE_SUB_MODULES)
+SBS_ALL_SUB_MODULES += $(MODULE_POST_SUB_MODULES)
+SBS_ALL_SUB_MODULES := $(strip $(SBS_ALL_SUB_MODULES))
+
+SBS_BUILD_DEPS := $(MODULE_EXT_DEPS)
+.PHONY: $(SBS_ALL_TGT) $(SBS_CLN_TGT) $(SBS_ALL_SUB_MODULES)
+
+SBS_TARGET := $(MAKECMDGOALS)
+ifeq ($(SBS_TARGET),)
+SBS_TARGET := $(SBS_ALL_TGT)
 endif
-SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(MODULE_SUB_MODULES)))
-SBS_BUILD_ORDER := $(strip $(SBS_BUILD_ORDER) $(strip $(MODULE_POST_BUILD) $(MODULE_POST_SUB_MODULES)))
-ifneq ($(SBS_BUILD_ORDER),$(SBS_MODULE_NAME))
-ifneq ($(SBS_BUILD_ORDER),)
-SBS_ORDER_STR := " order=[$(SBS_BUILD_ORDER)]"
+
+# ================
+# Pre build prints
+# ================
+SBS_BUILDING := 0
+ifneq ($(filter $(SBS_TARGET),$(SBS_ALL_TGT)),)
+SBS_BUILDING := 1
+endif
+
+SBS_CLEANING := 0
+ifneq ($(filter $(SBS_TARGET),$(SBS_CLN_TGT)),)
+SBS_CLEANING := 1
+endif
+
+SBS_EXTRA_TGTS := $(filter-out $(SBS_ALL_TGT) $(SBS_CLN_TGT),$(SBS_TARGET))
+SBS_EXTRA_TGTS := $(strip $(SBS_EXTRA_TGTS))
+
+SBS_TITLE_MSG_ID := build_title
+ifeq ($(filter $(SBS_TITLE_MSG_ID),$(MODULE_MSG_SUPRESS)),)
+SBS_TITLE := # Empty string
+ifeq ($(SBS_BUILDING),1)
+ifeq ($(SBS_CLEANING),1)
+SBS_TITLE := Rebuilding '$(SBS_MODULE_NAME)'
+else # $(SBS_BUILDING) == 1, $(SBS_CLEANING) == 0
+SBS_TITLE := Building '$(SBS_MODULE_NAME)'
+endif
+else # $(SBS_BUILDING) == 0
+ifeq ($(SBS_CLEANING),1) # $(SBS_BUILDING) == 0, $(SBS_CLEANING) == 1
+SBS_TITLE := Cleaning '$(SBS_MODULE_NAME)'
 endif
 endif
 
+ifeq ($(SBS_BUILDING),1)
+ifeq ($(SBS_CLEANING),1)
+ifneq ($(SBS_EXTRA_TGTS),)
+SBS_TITLE +=, additional targets: '$(SBS_EXTRA_TGTS)''
+endif
+endif
+endif
 
-define SbsForEach
-	for t in $(1); do $(2) $$t $(3) || exit $$? ; done
+ifneq ($(SBS_TITLE),)
+$(info $(SBS_TITLE))
+endif
+endif # Title message
+
+# End of pre-build prints
+
+
+# $1 - modules list
+# $2 - 1 if it's a SBS target 0 if external pre/post build target
+# Add the moudules to the dependencies list after rule is set, so following rules depend on them
+define GenSubModuleRule
+ifneq ($1,)
+$1: $$(SBS_BUILD_DEPS) $$(MAKEFILE_LIST)
+ifeq ($2,1)
+	@$(MAKE) -C $$@
+endif
+SBS_BUILD_DEPS += $1
+endif
 endef
 
-all:
-	@echo "Building '$(SBS_MODULE_NAME)'$(SBS_ORDER_STR)"
-	@$(call SbsForEach,$(MODULE_PRE_BUILD),$(MAKE) -f $(SBS_BASE_MAKEFILE))
-	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C)
-	@$(MAKE) -f $(SBS_BASE_MAKEFILE) $(SBS_MAIN_TARGET) $(MODULE_SUB_MODULES)
-	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C)
-	@$(call SbsForEach,$(MODULE_POST_BUILD),$(MAKE) -f $(SBS_BASE_MAKEFILE))
+$(eval $(call GenSubModuleRule,$(MODULE_PRE_BUILD),0))
+$(eval $(call GenSubModuleRule,$(MODULE_PRE_SUB_MODULES),1))
+$(SBS_ARTIFACT): $(SBS_BUILD_DEPS)
+$(eval $(call GenSubModuleRule,$(MODULE_SUB_MODULES),1))
+SBS_BUILD_DEPS += $(SBS_ARTIFACT)
+$(eval $(call GenSubModuleRule,$(MODULE_POST_SUB_MODULES),1))
+$(eval $(call GenSubModuleRule,$(MODULE_POST_BUILD),0))
 
-clean:
-	@echo "Cleaning '$(SBS_MODULE_NAME)'$(SBS_ORDER_STR)"
-	@$(call SbsForEach,$(MODULE_PRE_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))
-	@$(call SbsForEach,$(MODULE_PRE_SUB_MODULES),$(MAKE) -C, clean)
-	@$(MAKE) -f $(SBS_BASE_MAKEFILE) $(SBS_CLEAN_TARGET) $(SBS_SUBMODULES_CLEAN)
-	@$(call SbsForEach,$(MODULE_POST_SUB_MODULES),$(MAKE) -C, clean)
-	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))
+$(SBS_ALL_TGT): $(SBS_BUILD_DEPS)
+	@true
 
+ifneq ($(SBS_ALL_SUB_MODULES),)
+SBS_CLN_SUFFIX := __clean
+SBS_SUB_MODULES_CLN_TGTS := $(addsuffix $(SBS_CLN_SUFFIX),$(SBS_ALL_SUB_MODULES))
+.PHONY: $(SBS_SUB_MODULES_CLN_TGTS)
+$(SBS_SUB_MODULES_CLN_TGTS):
+	@$(MAKE) -C $(@:$(SBS_CLN_SUFFIX)=) $(SBS_CLN_TGT)
+endif
+
+# Cleaning targets
+ifneq ($(MODULE_PRE_CLN),)
+$(SBS_CLN_TGT) $(SBS_SUB_MODULES_CLN_TGTS): $(MODULE_PRE_CLN)
+endif
+
+SBS_ALL_SUB_CLN_TGTS := $(MODULE_PRE_CLN)
+SBS_ALL_SUB_CLN_TGTS += $(SBS_ARTIFACT_CLN_TGT)
+SBS_ALL_SUB_CLN_TGTS += $(SBS_SUB_MODULES_CLN_TGTS)
+SBS_ALL_SUB_CLN_TGTS += $(MODULE_POST_CLN)
+SBS_ALL_SUB_CLN_TGTS := $(strip $(SBS_ALL_SUB_CLN_TGTS))
+
+$(SBS_CLN_TGT): $(SBS_ALL_SUB_CLN_TGTS)
+	@true
+
+ifneq ($(MODULE_POST_CLN),)
+$(MODULE_POST_CLN): $(MODULE_PRE_CLN) $(SBS_CLN_TGT) $(SBS_SUB_MODULES_CLN_TGTS)
+endif
+
+# Debug targets
 sbs_version:
-	@echo SBS version $(SBS_VERSION)
+	@$(ECHO) SBS version $(SBS_VERSION)
 
 define SbsDbgTitle
 	TITLE="$(1)"; \
 	COND_VALUE="$(2)"; \
 	COND_VALUE="$${COND_VALUE#"$${COND_VALUE%%[![:space:]]*}"}"; \
 	if [[ -z $${SBS_DBG_TERMS} && -n $${COND_VALUE} ]]; then \
-		echo; \
-		echo $${TITLE} ;\
-		echo $${TITLE//?/=} ;\
+		$(ECHO); \
+		$(ECHO) $${TITLE} ;\
+		$(ECHO) $${TITLE//?/=} ;\
 	fi
 endef
 
@@ -350,7 +407,6 @@ define SbsDbgVar
 endef
 
 sbs_dump_module_vars:
-	@echo $(SBS_FORCE_DBG)
 	@$(call SbsDbgTitle,Base Module Settings,Always)
 	@$(call SbsDbgVar,MODULE_NAME)
 	@$(call SbsDbgVar,MODULE_SRCS)
@@ -385,11 +441,11 @@ sbs_dump_module_submodules:
 
 sbs_dump_module_build_steps:
 	@$(call SbsDbgTitle,Build Steps,\
-		$(MODULE_PRE_BUILD) $(MODULE_POST_BUILD) $(MODULE_PRE_CLEAN) $(MODULE_POST_CLEAN))
+		$(MODULE_PRE_BUILD) $(MODULE_POST_BUILD) $(MODULE_PRE_CLN) $(MODULE_POST_CLN))
 	@$(call SbsDbgVar,MODULE_PRE_BUILD)
 	@$(call SbsDbgVar,MODULE_POST_BUILD)
-	@$(call SbsDbgVar,MODULE_PRE_CLEAN)
-	@$(call SbsDbgVar,MODULE_POST_CLEAN)
+	@$(call SbsDbgVar,MODULE_PRE_CLN)
+	@$(call SbsDbgVar,MODULE_POST_CLN)
 
 sbs_dump_module: sbs_dump_module_vars sbs_dump_module_submodules sbs_dump_module_build_steps
 
@@ -398,13 +454,12 @@ sbs_dump_internals:
 	@$(call SbsDbgVar,SBS_MODULE_NAME)
 	@$(call SbsDbgVar,SBS_MODULE_PATH)
 	@$(call SbsDbgVar,SBS_PROJ_ROOT)
-	@$(call SbsDbgVar,SBS_BASE_MAKEFILE)
 	@$(call SbsDbgVar,SBS_VERSION)
 	@$(call SbsDbgTitle,Build Settings,Always)
+	@$(call SbsDbgVar,SBS_EXTRA_TGTS)
+	@$(call SbsDbgVar,SBS_BUILD_DEPS)
 	@$(call SbsDbgVar,SBS_BIN_TYPE)
 	@$(call SbsDbgVar,SBS_FLAV)
-	@$(call SbsDbgVar,SBS_MAIN_TARGET)
-	@$(call SbsDbgVar,SBS_CLEAN_TARGET)
 	@$(call SbsDbgVar,SBS_SRCS)
 	@$(call SbsDbgVar,SBS_CDEFS)
 	@$(call SbsDbgVar,SBS_CWARNS)
@@ -419,11 +474,14 @@ sbs_dump_internals:
 	@$(call SbsDbgVar,SBS_OBJS_DEPS)
 	@$(call SbsDbgVar,SBS_ARTIFACT)
 	@$(call SbsDbgVar,SBS_ARTIFACT_DIR)
+	@$(call SbsDbgVar,SBS_CLN_FILES)
+	@$(call SbsDbgVar,SBS_ARTIFACT_CLN_TGT)
+	@$(call SbsDbgVar,SBS_CLN_TGT)
 	@$(call SbsDbgVar,SBS_C_SUFFIXES)
 	@$(call SbsDbgVar,SBS_CXX_SUFFIXES)
 	@$(call SbsDbgVar,SBS_CSUITE)
 	@$(call SbsDbgVar,SBS_CC)
 	@$(call SbsDbgVar,SBS_CCPP)
+	@$(call SbsDbgVar,SBS_ALL_SUB_MODULES)
 
 sbs_dump_all: sbs_dump_module sbs_dump_internals
-
