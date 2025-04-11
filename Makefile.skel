@@ -184,12 +184,12 @@
 # Space separated list of make targets to run before the module and it's sub module are cleaned. For
 # each <TARGET> token in this list, a 'make <TARGET>' is invoked. It's the users responsibility to
 # make sure targets on this list are valid.
-#MODULE_PRE_CLEAN :=
+#MODULE_PRE_CLN :=
 
 # Space separated list of make targets to run after the module and it's sub module are cleaned. For
 # each <TARGET> token in this list, a 'make <TARGET>' is invoked. It's the users responsibility to
 # make sure targets on this list are valid.
-#MODULE_POST_CLEAN :=
+#MODULE_POST_CLN :=
 
 # Set this to 1 to show the full compile and link command SBS as running, with all the set and
 # derived flags.
