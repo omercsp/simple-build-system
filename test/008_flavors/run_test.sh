@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+here=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 makefile_base=Makefile.base
 makefile=Makefile
 DEFAULT="default"
@@ -19,7 +19,7 @@ _test_flavor()
 	echo "-----------------"
 	echo "Flavor=${flav} use_sbs_def=${use_sbs_def}"
 	sed -e "s/MODULE_FLAV :=/MODULE_FLAV := ${flav}/" ${makefile_base} > ${makefile}
-	if [[ ${use_sbs_def} == ${DEFAULT} ]]; then
+	if [[ ${use_sbs_def} == "${DEFAULT}" ]]; then
 		sed -i -e '/MODULE_USE_DEF_FLAV :=/d' ${makefile}
 	else
 		sed -i -e "s/MODULE_USE_DEF_FLAV :=/MODULE_USE_DEF_FLAV :=${use_sbs_def}/" ${makefile}
@@ -28,7 +28,7 @@ _test_flavor()
 	make -j
 	${prog}
 
-	[[ ${use_sbs_def} == ${DEFAULT} ]] && use_sbs_def=1
+	[[ ${use_sbs_def} == "${DEFAULT}" ]] && use_sbs_def=1
 	[[ (${flav} != "dbg" && ${flav} != "rel") || ${use_sbs_def} -ne 1 ]] && return
 
 	if file ${prog} | grep -q debug_info; then

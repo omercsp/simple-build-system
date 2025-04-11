@@ -6,21 +6,14 @@ MODULE_SRCS := main.c
 MODULE_POST_SUB_MODULES := ok4 ok5
 MODULE_POST_BUILD := postbuild0 postbuild1
 
-prebuild0:
-	@echo "On $@"
-
-prebuild1:
-	@echo "On $@"
-
-postbuild0:
-	@echo "On $@"
-
-postbuild1:
+prebuild0 prebuild1 prebuild2 postbuild0 postbuild1:
 	@echo "On $@"
 
 bad_step:
 	@echo "On $@"
 	@false
+
+.PHONY: prebuild0 prebuild1 postbuild0 postbuild1
 
 TOP_LEVEL=$(shell git rev-parse --show-toplevel)
 include $(TOP_LEVEL)/module.inc.mk

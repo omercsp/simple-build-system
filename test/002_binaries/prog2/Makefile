@@ -9,7 +9,7 @@ MODULE_PRE_SUB_MODULES := prog2_dynlib
 MODULE_LIB_DIRS := prog2_dynlib/obj/$(MODULE_FLAV)
 MODULE_PROJ_LIB_DIRS := lib
 MODULE_LIBS := prog2_dynlib
-MODULE_BIN_DEPS := prog2_dynlib/obj/$(MODULE_FLAV)/libprog2_dynlib.so
+# MODULE_BIN_DEPS := prog2_dynlib/obj/$(MODULE_FLAV)/libprog2_dynlib.so
 MODULE_PROJECT_INCLUDE_DIRS := test/002_binaries/include
 
 PROJ_ROOT := $(shell git rev-parse --show-toplevel)

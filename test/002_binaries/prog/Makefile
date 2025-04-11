@@ -1,6 +1,5 @@
 include ../config.mk
 
-MODULE_VERBOSE := 1
 MODULE_NAME := prog
 MODULE_SRCS := main.c
 MODULE_LIBS := dynamic static
