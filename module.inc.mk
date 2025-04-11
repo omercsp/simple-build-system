@@ -321,6 +321,21 @@ $(info $(SBS_TITLE))
 endif
 endif # Title message
 
+# Check if parallel build is enabled with "clean all", and warn if so
+# $(info $(SBS_TAB)abc)
+SBS_PARALLEL_BULD_MSG_ID = parallel_rebuild_wrn
+ifeq ($(filter $(SBS_PARALLEL_BULD_MSG_ID),$(MODULE_MSG_SUPRESS)),)
+ifeq ($(SBS_BUILDING),1)
+ifeq ($(SBS_CLEANING),1)
+ifneq ($(findstring -j,$(MAKEFLAGS)),)
+$(info $(null))
+$(info WARNING: Parallel rebuilds ('make clean all -j<N>') might lead to build race conditions)
+$(info $(null)         Consider separating 'make clean' and 'make -j' for parallel rebuilds)
+$(info $(null))
+endif
+endif
+endif
+endif
 # End of pre-build prints
 
 
