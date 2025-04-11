@@ -1,6 +1,5 @@
 include ../config.mk
 
-MODULE_VERBOSE := 1
 MODULE_SRCS := main.c
 FLAV=$(MODULE_FLAV)
 

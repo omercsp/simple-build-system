@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-here=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+here=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+cd ${here} || exit 1
 
-cd $here
+set -e
+tmp_file=$(mktemp)
+make -j | sed -e '/^Building/d' -e 's/[0-9]/X/' &> ${tmp_file}
 
-echo "Cleaning build-order-test"
-make -j clean | sed -e 's/00./00X/g'
-echo "Building build-order-test"
-make -j | sed -e 's/00./00X/g'
+grep Starting ${tmp_file}
+echo "-----------------"
+grep Finished ${tmp_file}
+
+rm ${tmp_file}
