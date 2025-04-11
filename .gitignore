@@ -6,3 +6,5 @@ test/*/module.inc.mk
 .cache/
 compile_commands.json
 .tasks.json
+.session.vim
+.tasks.yaml
