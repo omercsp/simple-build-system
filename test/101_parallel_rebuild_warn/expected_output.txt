@@ -1,0 +1,28 @@
+----------------- Parallel rebuild, expecting warning -----------------
+Rebuilding 'parallel_rebuild_warn_test'
+
+WARNING: Parallel rebuilds ('make clean all -j<N>') might lead to build race conditions
+         Consider separating 'make clean' and 'make -j' for parallel rebuilds
+
+CC	main.c
+LD	parallel_rebuild_warn_test
+--------------- Sequential rebuild, expecting no warning---------------
+Rebuilding 'parallel_rebuild_warn_test'
+CC	main.c
+LD	parallel_rebuild_warn_test
+
+--------------- Separated rebuild, expecting no warning ---------------
+Cleaning 'parallel_rebuild_warn_test'
+Building 'parallel_rebuild_warn_test'
+CC	main.c
+LD	parallel_rebuild_warn_test
+
+--------------- Parallel rebuild, supress warning (env) ---------------
+Rebuilding 'parallel_rebuild_warn_test'
+CC	main.c
+LD	parallel_rebuild_warn_test
+
+------------- Parallel rebuild, supress warning (make) ----------------
+Rebuilding 'parallel_rebuild_warn_test'
+CC	main.c
+LD	parallel_rebuild_warn_test
