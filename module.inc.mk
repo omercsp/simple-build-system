@@ -7,7 +7,7 @@ ECHO := /usr/bin/echo
 MAKEFLAGS := --no-print-directory
 SBS_MODULE_PATH := $(shell pwd)
 SBS_BASE_MAKEFILE := $(firstword $(MAKEFILE_LIST))
-SBS_VERSION := 0.5.0
+SBS_VERSION := 0.5.1
 
 # If no module name is defined use the directory as the name
 SBS_MODULE_NAME := $(MODULE_NAME)
@@ -338,10 +338,11 @@ define SbsDbgVar
 	if [[ -n $${VALUE} || $${SBS_FORCE_DBG} -eq 1 ]] && \
 	   [[ -z $${SBS_DBG_TERMS} || $${NAME} == *"$${SBS_DBG_TERMS}"* ]]; then \
 		if (( $${#VALUE} > $$(tput cols) -30 -5 )); then \
-			printf "%s:\n" $${NAME}; \
-			for i in $${VALUE}; do \
-				printf "%-30s%s\n" "" "$${i}"; \
-			done;\
+			read -ra elements <<< "$${VALUE}"; \
+			printf "%-30s%s\n" $${NAME}: "$${elements[0]}"; \
+			for (( i =1; i < $${#elements[@]}; i++ )); do \
+				printf "%-30s%s\n" "" "$${elements[$$i]}"; \
+			done; \
 		else \
 			printf "%-30s%s\n" $${NAME}: "$${VALUE}"; \
 		fi; \

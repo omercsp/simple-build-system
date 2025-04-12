@@ -14,7 +14,8 @@ Cleaning 'prog-with-out-of-tree-src'
 Cleaning 'prog2' order=[prog2_dynlib prog2]
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern'
+Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Cleaning 'nobin'
 
 Building binaries
 -----------------
@@ -30,7 +31,8 @@ Building 'prog-with-out-of-tree-src'
 Building 'prog2' order=[prog2_dynlib prog2]
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern'
+Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Building 'nobin'
 
 Checking binaries output
 ------------------------
@@ -113,7 +115,8 @@ Cleaning 'prog-with-out-of-tree-src'
 Cleaning 'prog2' order=[prog2_dynlib prog2]
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern'
+Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Cleaning 'nobin'
 
 Building binaries
 -----------------
@@ -129,7 +132,8 @@ Building 'prog-with-out-of-tree-src'
 Building 'prog2' order=[prog2_dynlib prog2]
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern'
+Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Building 'nobin'
 
 Checking binaries output
 ------------------------
@@ -212,7 +216,8 @@ Cleaning 'prog-with-out-of-tree-src'
 Cleaning 'prog2' order=[prog2_dynlib prog2]
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern'
+Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Cleaning 'nobin'
 
 Building binaries
 -----------------
@@ -228,7 +233,8 @@ Building 'prog-with-out-of-tree-src'
 Building 'prog2' order=[prog2_dynlib prog2]
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern'
+Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Building 'nobin'
 
 Checking binaries output
 ------------------------
@@ -311,7 +317,8 @@ Cleaning 'prog-with-out-of-tree-src'
 Cleaning 'prog2' order=[prog2_dynlib prog2]
 Cleaning 'prog2_dynlib'
 Cleaning 'prog_nobin'
-Cleaning 'prog-nobin-extern'
+Cleaning 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Cleaning 'nobin'
 
 Building binaries
 -----------------
@@ -327,7 +334,8 @@ Building 'prog-with-out-of-tree-src'
 Building 'prog2' order=[prog2_dynlib prog2]
 Building 'prog2_dynlib'
 Building 'prog_nobin'
-Building 'prog-nobin-extern'
+Building 'prog-nobin-extern' order=[../nobin prog-nobin-extern]
+Building 'nobin'
 
 Checking binaries output
 ------------------------
