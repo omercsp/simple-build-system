@@ -1,0 +1,8 @@
+----------------- Normal build -----------------
+Cleaning 'title_test'
+Building 'title_test'
+CC	main.c
+LD	title_test
+---------------- Supress titles ----------------
+CC	main.c
+LD	title_test
