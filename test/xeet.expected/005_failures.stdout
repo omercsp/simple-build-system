@@ -1,0 +1,196 @@
+Cleaning 'failures'
+Cleaning 'ok0'
+Cleaning 'ok1'
+Cleaning 'ok2'
+Cleaning 'ok3'
+Cleaning 'ok4'
+Cleaning 'ok5'
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On postbuild1
+Build failure test
+
+Pre build failure - start
+Building 'failures'
+On bad_step
+Build failed, (expected)
+2
+
+Pre build failure - middle
+Building 'failures'
+On prebuild0
+On bad_step
+Build failed, (expected)
+2
+
+Pre build failure - end
+Building 'failures'
+On prebuild0
+On prebuild1
+On bad_step
+Build failed, (expected)
+2
+
+Pre sub-modules failure - start
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Pre sub-modules failure - middle
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Pre sub-modules failure - end
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Bad current module
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Build failed, (expected)
+2
+
+Sub-modules failure - start
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Sub-modules failure - middle
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Sub-modules failure - end
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Post sub-modules failure - start
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Post sub-modules failure - middle
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Post sub-modules failure - end
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+Building 'bad_submodule'
+Build failed, (expected)
+2
+
+Post build failure - start
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On bad_step
+Build failed, (expected)
+2
+
+Post build failure - middle
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On bad_step
+Build failed, (expected)
+2
+
+Post build failure - end
+Building 'failures'
+On prebuild0
+On prebuild1
+Building 'ok0'
+Building 'ok1'
+Building 'ok2'
+Building 'ok3'
+Building 'ok4'
+Building 'ok5'
+On postbuild0
+On postbuild1
+On bad_step
+Build failed, (expected)
+2
+

@@ -1,0 +1,82 @@
+-----------------
+Flavor=dbg use_sbs_def=default
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has debug1 1
+Has debug2 1
+Debug info exists
+-----------------
+Flavor=dbg use_sbs_def=1
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has debug1 1
+Has debug2 1
+Debug info exists
+-----------------
+Flavor=dbg use_sbs_def=0
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+-----------------
+Flavor=rel use_sbs_def=default
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+No debug info
+-----------------
+Flavor=rel use_sbs_def=1
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+No debug info
+-----------------
+Flavor=rel use_sbs_def=0
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+-----------------
+Flavor=newflav use_sbs_def=default
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+-----------------
+Flavor=newflav use_sbs_def=1
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+-----------------
+Flavor=newflav use_sbs_def=0
+Building 'flavor'
+CC	main.c
+LD	flavor
+flavor test
+Has no debug1
+Has no debug2
+-----------------
+Testing illegal flavor (expecting failure)
+Make failed (expected)
+-----------------
+Testing illegal flavor default setting usage (expecting failure)
+Make failed (expected)

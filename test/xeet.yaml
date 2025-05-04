@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/omercsp/xeet/refs/heads/master/schemas/xeet_schema_v0.7.json
+#
+# include: [inheritance.yaml]
+#
+# variables:
+  # base_cmd: '{XEET_ROOT}/../xeet --no-colors'
+  # run_base_cmd: '{base_cmd} run -c testbed/xeet.yaml'
+  # run_cmd: '{run_base_cmd}'
+  # list_cmd: '{base_cmd} list -c testbed/xeet.yaml'
+  # info_cmd: '{base_cmd} info -c testbed/xeet.yaml'
+  # run_output_base_cmd: '{run_cmd} -g passing -X inheritance -z 004 -z 008 -Z 003 -Z 031'
+# settings:
+#   base_test_step:
+#     type: exec
+#     cwd: '{XEET_ROOT}'
+#     expected_stdout_file: "xeet.expected/{XEET_TEST_NAME}/stdout"
+#     output_filters:
+#       - from_str: "{XEET_ROOT}"
+#         to_str: __XEET_ROOT__
+#       - from_str: "[0-9]+\\.[0-9]\\{3}s"
+#         to_str: "X.XXXs"
+#         regex: true
+#   base_test_step_rc3:
+#     base: settings.base_test_step
+#     allowed_rc: [3]
+settings:
+  exec_step:
+    use_os_env: true
+tests:
+  - name: make_base
+    short_desc: Make base test
+    abstract: true
+    run:
+      - type: exec
+        env:
+          FULL_TEST: "1"
+        cmd: ./run_test.sh
+        cwd: '{XEET_ROOT}/{XEET_TEST_NAME}'
+        expected_stdout_file: "{XEET_ROOT}/xeet.expected/{XEET_TEST_NAME}.stdout"
+        expected_stderr: ""
+    abstract: true
+  - name: 001_tutorial
+    base: make_base
+    short_desc: Test sanity for development code
+    groups: [sanity]
