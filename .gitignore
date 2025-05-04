@@ -8,3 +8,4 @@ compile_commands.json
 .tasks.json
 .session.vim
 .tasks.yaml
+test/xeet.out
