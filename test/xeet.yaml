@@ -1,0 +1,291 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/omercsp/xeet/refs/heads/master/schemas/xeet_schema_v0.7.json
+settings:
+  xeet:
+    default_step_type: exec
+
+resources:
+  tutorial_dir:
+    - value: "tutorial_dir"
+  binaries_lock:
+    - value: "binaries_lock"
+
+variables:
+  test_name: '{XEET_TEST_BASE_NAME}'
+  test_dir: '{XEET_ROOT}/{test_name}'
+
+tests:
+  - name: make_base
+    abstract: true
+    short_desc: Base test for declarative SBS make builds
+    matrix:
+      flavor: [dbg, rel]
+      csuite: [gcc, clang]
+    pre_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+    run:
+      - cmd: make
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+    post_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+        allowed_rc: "*"
+
+  - name: script_base
+    abstract: true
+    short_desc: Base test for script-based SBS tests
+    run:
+      - cmd: ./run_test.sh
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          FULL_TEST: "1"
+        expected_stdout_file: '{test_dir}/expected_output.txt'
+        expected_stderr: ""
+    post_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        allowed_rc: "*"
+
+  - name: 001_tutorial
+    base: make_base
+    short_desc: Tutorial build and execution test
+    groups: [sanity, tutorial]
+    resources:
+      - pool: tutorial_dir
+    run_inheritance: append
+    run:
+      - cmd: 'obj/{flavor}/tutorial'
+        cwd: '{test_dir}'
+        expected_stdout: "SBS Hello, world!\n"
+
+  - name: 002_empty
+    short_desc: Test empty module build
+    groups: [sanity, empty]
+    pre_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: "Cleaning 'empty'\n"
+    run:
+      - cmd: make
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: "Building 'empty'\n"
+    post_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        allowed_rc: "*"
+
+  - name: 003_order
+    base: script_base
+    short_desc: Test submodules execution order
+    groups: [sanity, order]
+
+  - name: 004_failures
+    base: script_base
+    short_desc: Test build error handling
+    groups: [sanity, failures]
+
+  - name: 005_invocation
+    base: script_base
+    short_desc: Test make invocation variants
+    groups: [sanity, invocation]
+
+  - name: 006_deps
+    base: script_base
+    short_desc: Test header dependencies tracking
+    groups: [sanity, deps]
+
+  - name: 007_flavors
+    base: script_base
+    short_desc: Test build flavor configurations
+    groups: [sanity, flavors]
+
+  - name: 100_binaries
+    short_desc: Test binary artifact types and linking
+    groups: [sanity, binaries]
+    resources:
+      - pool: binaries_lock
+    matrix:
+      flavor: [dbg, rel]
+      csuite: [gcc, clang]
+    pre_run:
+      - cmd: make -j clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+    run:
+      - cmd: make -j
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+      - cmd: 'prog/obj/{flavor}/prog'
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          LD_LIBRARY_PATH: '{test_dir}/lib/{flavor}'
+        expected_stdout: |+
+          sbs-test [main:9]: Starting prog
+          sbs-test [main:10]: Calling dynlib_func0
+          sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+          sbs-test [main:11]: Calling staticlib_func0
+          sbs-test [staticlib_func0:5]:
+          sbs-test [main:12]: Calling staticlib_additional_func0
+          sbs-test [staticlib_additional_func0:6]:
+          sbs-test [main:13]: Ending prog
+
+      - cmd: 'dynlib/dynlib_tester/obj/{flavor}/dyn_tester'
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          LD_LIBRARY_PATH: '{test_dir}/lib/{flavor}'
+        expected_stdout: |+
+          sbs-test [main:8]: Starting dyn_tester
+          sbs-test [main:9]: Calling dynlib_func0
+          sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+          sbs-test [main:10]: Ending dyn_tester
+
+      - cmd: 'prog-nobin/obj/{flavor}/prog_nobin'
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          LD_LIBRARY_PATH: '{test_dir}/lib/{flavor}'
+        expected_stdout: |+
+          sbs-test [main:10]: Starting prog_nobin
+          sbs-test [main:11]: Calling dynlib_func0
+          sbs-test [dynlib_func0:5]: DYNLIB_DEF=10 PROJECT_DEF=1
+          sbs-test [main:12]: Calling staticlib_func0
+          sbs-test [staticlib_func0:5]:
+          sbs-test [main:13]: Calling staticlib_additional_func0
+          sbs-test [staticlib_additional_func0:6]:
+          sbs-test [main:14]: Calling staticlib_additional_func0
+          sbs-test [staticlib_additional_func0:6]:
+          sbs-test [main:15]: Calling nobin_func0
+          sbs-test [nobin_func0:8]: function=nobin_func0
+          sbs-test [main:16]: Calling nobin_func1
+          sbs-test [nobin_func1:8]: function=nobin_func1
+          sbs-test [main:17]: Ending prog_nobin
+
+      - cmd: 'prog-nobin-extern/obj/{flavor}/prog-nobin-extern'
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          LD_LIBRARY_PATH: '{test_dir}/lib/{flavor}'
+        expected_stdout: |+
+          sbs-test [main:7]: Starting prog-nobin-extern
+          sbs-test [main:8]: Calling nobin_func0
+          sbs-test [nobin_func0:8]: function=nobin_func0
+          sbs-test [main:9]: Calling nobin_func1
+          sbs-test [nobin_func1:8]: function=nobin_func1
+          sbs-test [main:10]: Ending prog-nobin-extern
+
+      - cmd: 'prog2/obj/{flavor}/prog2'
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          LD_LIBRARY_PATH: '{test_dir}/prog2/prog2_dynlib/obj/{flavor}'
+        expected_stdout: |+
+          sbs-test [main:21]: Starting prog2
+          sbs-test [main:22]: log(16)=2
+          sbs-test [main:23]: Calling prog2_dynlib_func0
+          sbs-test [prog2_dynlib_func0:5]:
+          sbs-test [main:24]: Ending prog2
+
+      - cmd: 'multi-lang/obj/{flavor}/multi-lang'
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: |+
+          sbs-test [main:8]: Starting multi-lang
+          sbs-test [main:9]: Calling cfile_func
+          sbs-test [cfile_func:7]: Calling cppfile_func
+          sbs-test [cppfile_func:7]:
+          sbs-test [main:10]: Ending multi-lang
+
+      - cmd: 'multi-lang2/obj/{flavor}/multi-lang2'
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: |+
+          sbs-test [main:8]: Starting multi-lang2
+          sbs-test [main:9]: Calling cfile_func0
+          sbs-test [cfile_func0:7]: Calling cppfile_func0
+          sbs-test [cppfile_func0:8]: Calling cfile_func1
+          sbs-test [cfile_func1:12]: Calling cppfile_func1
+          sbs-test [cppfile_func1:16]: Final call
+          sbs-test [main:10]: Ending multi-lang2
+
+      - cmd: 'prog-with-out-of-tree-src/obj/{flavor}/prog-with-out-of-tree-src'
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: |+
+          sbs-test [main:13]: Starting prog-with-out-of-tree-src
+          sbs-test [main:14]: Calling out_of_tree_func
+          sbs-test [out_of_tree_func:5]: Out of tree func
+          sbs-test [main:15]: Calling internal_func
+          sbs-test [internal_func:7]:
+          sbs-test [main:16]: Ending prog-with-out-of-tree-src
+
+    post_run:
+      - cmd: make -j clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_FLAV: '{flavor}'
+          MODULE_CSUITE: '{csuite}'
+        allowed_rc: "*"
+
+  - name: 500_title_verbosity
+    short_desc: Test build title message suppression
+    groups: [sanity, verbosity]
+    pre_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+    run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: "Cleaning 'title_test'\n"
+      - cmd: make all -j4
+        cwd: '{test_dir}'
+        use_os_env: true
+        expected_stdout: "Building 'title_test'\nCC\tmain.c\nLD\ttitle_test\n"
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_MSG_SUPRESS: build_title
+        expected_stdout: ""
+      - cmd: make all -j4
+        cwd: '{test_dir}'
+        use_os_env: true
+        env:
+          MODULE_MSG_SUPRESS: build_title
+        expected_stdout: "CC\tmain.c\nLD\ttitle_test\n"
+    post_run:
+      - cmd: make clean
+        cwd: '{test_dir}'
+        use_os_env: true
+        allowed_rc: "*"
+
+  - name: 501_parallel_rebuild_warn
+    base: script_base
+    short_desc: Test parallel rebuild warning and suppression
+    groups: [sanity, rebuild_warn]
