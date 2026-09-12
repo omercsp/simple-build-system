@@ -24,7 +24,6 @@ SBS_MAIN_TARGET := $(SBS_EMPTY_TARGET)
 
 ######################### Binary build start #########################
 ifneq ($(MODULE_SRCS),)
-
 SBS_CFLAGS := $(MODULE_CFLAGS)
 SBS_CDEFS := $(MODULE_CDEFS)
 SBS_CWARNS := $(MODULE_CWARNS)
@@ -51,7 +50,7 @@ SBS_CLANG_SUITE := clang
 SBS_CSUITE := $(MODULE_CSUITE)
 ifneq ($(SBS_CSUITE),)
 ifeq ($(filter $(SBS_CSUITE),$(SBS_GCC_SUITE) $(SBS_CLANG_SUITE)),)
-$(error Unkonwn compiler suite $(SBS_CSUITE))
+$(error Unknown compiler suite $(SBS_CSUITE))
 endif
 else
 SBS_CSUITE := $(SBS_GCC_SUITE)
@@ -67,7 +66,7 @@ endif
 
 # Handle binary type
 SBS_EXEC_BIN_TYPE := exec
-SBS_SHARED_BING_TYPE := shared
+SBS_SHARED_BIN_TYPE := shared
 SBS_STATIC_BIN_TYPE := static
 SBS_NONE_BIN_TYPE := none
 SBS_BIN_TYPE := $(MODULE_BIN_TYPE)
@@ -75,11 +74,11 @@ ifeq ($(SBS_BIN_TYPE), )
 SBS_BIN_TYPE := $(SBS_EXEC_BIN_TYPE)
 endif
 
-ifeq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BING_TYPE) $(SBS_STATIC_BIN_TYPE) $(SBS_NONE_BIN_TYPE)),)
-$(error Unkonwn module type $(SBS_BIN_TYPE))
+ifeq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BIN_TYPE) $(SBS_STATIC_BIN_TYPE) $(SBS_NONE_BIN_TYPE)),)
+$(error Unknown module type $(SBS_BIN_TYPE))
 endif
 
-ifneq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BING_TYPE)),) # Executable or shared
+ifneq ($(filter $(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE) $(SBS_SHARED_BIN_TYPE)),) # Executable or shared
 
 SBS_LD := $(MODULE_LD)
 ifeq ($(SBS_LD),)
@@ -188,7 +187,9 @@ SBS_INC_DIRS := $(MODULE_INCLUDE_DIRS)
 SBS_INC_DIRS += $(addprefix $(SBS_PROJ_ROOT)/,$(MODULE_PROJECT_INCLUDE_DIRS))
 
 ifeq ($(MODULE_CFLAGS_OVERRIDE),)
-SBS_CFLAGS += $(addprefix -W,$(SBS_CWARNS)) $(addprefix -D,$(SBS_CDEFS)) $(addprefix -I,$(SBS_INC_DIRS))
+SBS_CFLAGS += $(addprefix -W,$(SBS_CWARNS))
+SBS_CFLAGS += $(addprefix -D,$(SBS_CDEFS))
+SBS_CFLAGS += $(addprefix -I,$(SBS_INC_DIRS))
 else
 SBS_CFLAGS := $(MODULE_CFLAGS_OVERRIDE)
 endif
@@ -319,16 +320,16 @@ clean:
 	@$(call SbsForEach,$(MODULE_POST_CLEAN),$(MAKE) -f $(SBS_BASE_MAKEFILE))
 
 sbs_version:
-	@echo SBS version $(SBS_VERSION)
+	@$(ECHO) SBS version $(SBS_VERSION)
 
 define SbsDbgTitle
 	TITLE="$(1)"; \
 	COND_VALUE="$(2)"; \
 	COND_VALUE="$${COND_VALUE#"$${COND_VALUE%%[![:space:]]*}"}"; \
 	if [[ -z $${SBS_DBG_TERMS} && -n $${COND_VALUE} ]]; then \
-		echo; \
-		echo $${TITLE} ;\
-		echo $${TITLE//?/=} ;\
+		$(ECHO); \
+		$(ECHO) $${TITLE} ;\
+		$(ECHO) $${TITLE//?/=} ;\
 	fi
 endef
 
@@ -350,7 +351,6 @@ define SbsDbgVar
 endef
 
 sbs_dump_module_vars:
-	@echo $(SBS_FORCE_DBG)
 	@$(call SbsDbgTitle,Base Module Settings,Always)
 	@$(call SbsDbgVar,MODULE_NAME)
 	@$(call SbsDbgVar,MODULE_SRCS)
@@ -426,4 +426,3 @@ sbs_dump_internals:
 	@$(call SbsDbgVar,SBS_CCPP)
 
 sbs_dump_all: sbs_dump_module sbs_dump_internals
-
