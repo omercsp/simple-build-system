@@ -169,7 +169,7 @@
 
 # Space separated list of modules (directories) that are to be built after this module. For each
 # token <MODULE> in the list a 'make -C <MODULE>' is invoked.
-#MODULE_PRE_POS_MODULES :=
+#MODULE_POST_SUB_MODULES :=
 
 # Space separated list of make targets to run before the module and it's sub module are built. For
 # any of the sub modules of this module. For each <TARGET> token in this list, a 'make <TARGET>' is

@@ -2,7 +2,6 @@ include ../config.mk
 
 MODULE_NAME := dynamic
 MODULE_BIN_TYPE := shared
-MODULE_LANG := c
 MODULE_SRCS := dynamic.c
 MODULE_CDEFS += DYNLIB_DEF=10
 MODULE_POST_SUB_MODULES := dynlib_tester
