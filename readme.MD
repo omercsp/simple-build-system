@@ -194,7 +194,7 @@ For an `exec` `MODULE_BIN_TYPE` value, SBS builds an executable. This is the def
 ### Shared library
 For a `shared` `MODULE_BIN_TYPE` value, SBS builds a shared library, where:
 - Artifact file name is set to `lib<MODULE_NAME>.so`
-- Compilation flags are appended with `-fPIC`
+- Compilation flags are appended with `-fpic`
 - Link flags are appended with `-shared`
 
 Refer to the selected build suite documentation for further details.
@@ -332,9 +332,9 @@ Each module may define sub-modules. A sub-module is a directory with a valid Mak
 ## Sub-modules build order
 Sub-modules defined by `MODULE_PRE_SUB_MODULES` are built first, followed by the current module. Next, sub-modules in `MODULE_SUB_MODULES` are built, and finally, those in `MODULE_POST_SUB_MODULES` are built.
 
-When executing a parallel build (i.e. With `make -j`), the major difference is with the parent module and its sub modules defined in `MODULE_SUB_MODULES`, as they are all built in parallel. Pre and post sub-modules are still built one by one according to the order they are defined (Each sub-module is still built in parallel internally).
+When executing a parallel build (i.e. With `make -j`), sub-modules of the same group are built in parallel: all the `MODULE_PRE_SUB_MODULES` sub-modules are built together, then the parent module and its `MODULE_SUB_MODULES` sub-modules are built together, and finally all the `MODULE_POST_SUB_MODULES` sub-modules are built together. A group is only started once the previous group is done. Without parallel build, Make typically builds the sub-modules of a group in the order they are listed.
 
-To control the order of sub-modules within `MODULE_SUB_MODULES`, dependencies rules between the sub modules should be explicitly set. For example, if sub modules `sm0 sm1 sm2` are defined but `sm1` must be built before `sm0`, a dependency rule is due:
+To control the order of sub-modules within the same group, dependencies rules between the sub modules should be explicitly set. For example, if sub modules `sm0 sm1 sm2` are defined but `sm1` must be built before `sm0`, a dependency rule is due:
 
 ````makefile
 MODULE_SUB_MODULES := sm0 sm1 sm2
@@ -358,7 +358,7 @@ include module.inc.mk
 1. `pre_order`
 2. `my_prog`
 3. `unordered0`
-4. `unordered0`
+4. `unordered1`
 5. `post_order`
 
 Running make over this Makefile with parallel build will build the current and regular sub-modules in parallel:
@@ -413,6 +413,17 @@ MODULE_PRE_BUILD := display_message
 
 display_message:
 	@echo "This is displayed at the beginning of the module's build"
+```
+
+### Pre-build and post-build steps order
+Multiple targets may be listed in `MODULE_PRE_BUILD` and `MODULE_POST_BUILD`. All pre-build targets are executed before the module's build, and all post-build targets are executed after it. However, targets within the same list are independent of each other, and SBS does not infer an order from the order they are listed in.
+
+Without parallel build, Make typically processes them in the order they are listed. When executing a parallel build (i.e. With `make -j`), targets of the same list may be executed concurrently. To control the order, dependencies rules between the targets should be explicitly set. For example, if `gen_headers` must run before `gen_tables`:
+
+```makefile
+MODULE_PRE_BUILD := gen_headers gen_tables
+
+gen_tables: gen_headers
 ```
 
 ## Inclusion of `module.inc.mk` in a complex project structure
