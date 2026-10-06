@@ -415,6 +415,17 @@ display_message:
 	@echo "This is displayed at the beginning of the module's build"
 ```
 
+### Pre-build and post-build steps order
+Multiple targets may be listed in `MODULE_PRE_BUILD` and `MODULE_POST_BUILD`. All pre-build targets are executed before the module's build, and all post-build targets are executed after it. However, targets within the same list are independent of each other, and SBS does not infer an order from the order they are listed in.
+
+Without parallel build, Make typically processes them in the order they are listed. When executing a parallel build (i.e. With `make -j`), targets of the same list may be executed concurrently. To control the order, dependencies rules between the targets should be explicitly set. For example, if `gen_headers` must run before `gen_tables`:
+
+```makefile
+MODULE_PRE_BUILD := gen_headers gen_tables
+
+gen_tables: gen_headers
+```
+
 ## Inclusion of `module.inc.mk` in a complex project structure
 SBS cannot determine the location of the `module.inc.mk` file relative to the current module. The user must set this path, and it may differ for each SBS Makefile.
 
