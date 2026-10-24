@@ -194,7 +194,7 @@ For an `exec` `MODULE_BIN_TYPE` value, SBS builds an executable. This is the def
 ### Shared library
 For a `shared` `MODULE_BIN_TYPE` value, SBS builds a shared library, where:
 - Artifact file name is set to `lib<MODULE_NAME>.so`
-- Compilation flags are appended with `-fpic`
+- Compilation flags are appended with `-fPIC`
 - Link flags are appended with `-shared`
 
 Refer to the selected build suite documentation for further details.

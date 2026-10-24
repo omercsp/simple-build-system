@@ -90,7 +90,7 @@ ifeq ($(SBS_BIN_TYPE), $(SBS_EXEC_BIN_TYPE))
 SBS_ARTIFACT := $(SBS_MODULE_NAME)
 else
 SBS_LDFLAGS += -shared
-SBS_CFLAGS += -fpic
+SBS_CFLAGS += -fPIC
 SBS_ARTIFACT := lib$(SBS_MODULE_NAME).so
 endif
 endif # Executable or shared
